@@ -1,9 +1,9 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: DALLE-2 Presentation
+title: DALL·E-2 Presentation
 author: Jason Schuehlein (js450)
-logo: logo.png
+# logo: logo.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -29,3 +29,8 @@ repository:
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
 html:
   use_repository_button: true
+
+sphinx:
+  extra_extensions:
+    - sphinxcontrib.mermaid
+    - sphinxcontrib.bibtex
