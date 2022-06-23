@@ -2,9 +2,9 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: intro
+root: content/intro
 chapters:
-- file: dalle2
-- file: demo
-- file: bonus
-- file: bibliography
+- file: content/dalle2
+- file: content/demo
+- file: content/bonus
+- file: content/bibliography
