@@ -6,4 +6,5 @@ root: intro
 chapters:
 - file: dalle2
 - file: demo
+- file: bonus
 - file: bibliography
