@@ -5,6 +5,6 @@ format: jb-book
 root: content/intro
 chapters:
 - file: content/dalle2
-- file: content/demo
+# - file: content/demo
 - file: content/bonus
 - file: content/bibliography

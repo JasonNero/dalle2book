@@ -5,7 +5,7 @@ Author: Jason Schuehlein (js450)
 Email: [js450@hdm-stuttgart.de](mailto:js450@hdm-stuttgart.de)  
 ```
 
-Diese Jupyter Book enthaelt die Vortragsunterlagen zum DALL·E-2 Vortrag
+Dieses Jupyter Book enthält die Vortragsunterlagen zum DALL·E-2 Vortrag
 im Rahmen der Object Recognition Vorlesung im SS22.
 
 ## Wichtige Links
