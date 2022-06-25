@@ -169,13 +169,20 @@ Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Co
 
 ### API Access
 
-Unter den Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen/Woche {cite}`DALLResearchPreview2022`.
+Unter den Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen pro Woche {cite}`DALLResearchPreview2022`.
 
-Die Verwendung der API ist nur für persönliche, nicht-kommerzielle oder wissenschaftliche Zwecke zulässig. User müssen beim Posten von generierten Bildern eindeutig kennzeichnen ob und welcher Teil des Bildes von DALL·E 2 generiert wurde. Ausserdem enthält jedes generierte Bild ein kleines Wasserzeichen in der unteren rechten Bildecke.
+Die Verwendung der API ist nur für persönliche, nicht-kommerzielle oder wissenschaftliche Zwecke zulässig. User müssen beim Posten von generierten Bildern eindeutig kennzeichnen ob und welcher Teil des Bildes von DALL·E 2 generiert wurde. Ausserdem enthält jedes generierte Bild ein kleines Wasserzeichen in der unteren rechten Bildecke (siehe {numref}`signature-fig`)
+
+```{figure} attachments/signature_closeup.png
+---
+name: signature-fig
+---
+The DALL·E 2 signature present in every image it creates.
+```
 
 Neben dem oben genannten Filtering auf den Trainingsdaten wird bei der API auch der Input gefiltert nach Kriterien wie "Sicherheitsbedenken" (sexualisierte oder suggestive Bilder von Kindern, Gewalt, politischer Content und "toxischer Content").
 
-Allerdings geschieht das Filtering von Input Text und Bild unabhängig voneinander. Demnach könnte man das Model anweisen Inpainting fuer ein Bild einer Dusche mit dem Text "a woman" zu machen, und dabei potenziell ein Bild einer nackten Frau generieren. 
+Allerdings geschieht das Filtering von Input Text und Bild unabhängig voneinander. Demnach könnte man das Model anweisen Inpainting für ein Bild einer Dusche mit dem Text "a woman" zu machen, und dabei potenziell ein Bild einer nackten Frau generieren.
 
 ### Capabilities and Limitations
 
@@ -197,11 +204,9 @@ CLIP (ViT-H/16)
 
 #### Prior
 
-#### Decoder
+#### Decoder and Upsampler
 
 Der Decoder der in DALL·E 2 Verwendung findet ist eine leichte Modifikation des Diffusions Models GLIDE von {cite:t}`nicholGLIDEPhotorealisticImage2022`.
-
-#### Upsampler
 
 ### Training
 
