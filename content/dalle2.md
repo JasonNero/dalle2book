@@ -7,16 +7,10 @@ Email: [js450@hdm-stuttgart.de](mailto:js450@hdm-stuttgart.de)
 
 ## Introduction Text-To-Image
 
-*Image Generation* beschreibt den Task neue Bilder aus einem gelernten
-Datensatz zu generieren. *Text-To-Image (TTI)* ist ein Subtask und beschreibt
-*Conditional Image Generation*, also die Generierung von Samples
-unter der Bedingung eines Labels $p(y|x)$.
-*Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch
-Generierung von Daten ausserhalb des Trainingsdatensatzes.
+*Image Generation* beschreibt den Task neue Bilder aus einem gelernten Datensatz zu generieren. *Text-To-Image (TTI)* ist ein Subtask und beschreibt *Conditional Image Generation*, also die Generierung von Samples unter der Bedingung eines Labels $p(y|x)$.
+*Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch Generierung von Daten ausserhalb des Trainingsdatensatzes.
 
-Hauefig wird TTI in Verbindung gebracht mit *Generative Adversarial Nets (GAN)*,
-seit Kurzem jedoch auch verstärkt mit *Denoising Diffusion Models*,
-worauf u.a. auch DALL·E 2 basiert.
+Hauefig wird TTI in Verbindung gebracht mit *Generative Adversarial Nets (GAN)*, seit Kurzem jedoch auch verstärkt mit *Denoising Diffusion Models*, worauf u.a. auch DALL·E 2 basiert.
 
 ## Recent Work
 
@@ -53,23 +47,13 @@ gantt
 
 :::
 
-Der namentliche Vorgaenger zu DALL·E 2 wurde am 5. Januar 2021 in einem
-[OpenAI Blog Eintrag](https://openai.com/blog/dall-e/) vorgestellt und
-einige Wochen spaeter, am 24. Februar 2021, wurde das Paper eingereicht mit dem Titel
-"Zero-Shot Text-to-Image Generation" {cite}`rameshZeroShotTexttoImageGeneration2021`.
+Der namentliche Vorgaenger zu DALL·E 2 wurde am 5. Januar 2021 in einem [OpenAI Blog Eintrag](https://openai.com/blog/dall-e/) vorgestellt und einige Wochen spaeter, am 24. Februar 2021, wurde das Paper eingereicht mit dem Titel "Zero-Shot Text-to-Image Generation" {cite}`rameshZeroShotTexttoImageGeneration2021`.
 
-DALL·E besteht aus zwei Modulen: dem *Discrete Variational Autoencoder (dVAE)*
-und einem *Decoder-Only Sparse Transformer*. Letzterer basiert nach
-eigenen Angaben auf einer Variante von GPT-3.
+DALL·E besteht aus zwei Modulen: dem *Discrete Variational Autoencoder (dVAE)* und einem *Decoder-Only Sparse Transformer*. Letzterer basiert nach eigenen Angaben auf einer Variante von GPT-3.
 
-Lediglich der Code des dVAE Moduls wurde von OpenAI auf GitHub
-veröffentlicht unter [`openai/DALL-E`](https://github.com/openai/DALL-E).
-Eine inoffizielle aber komplette Implementierung findet sich hier
-[`lucidrains/DALLE-pytorch`](https://github.com/lucidrains/DALLE-pytorch).
+Lediglich der Code des dVAE Moduls wurde von OpenAI auf GitHub veröffentlicht unter [`openai/DALL-E`](https://github.com/openai/DALL-E). Eine inoffizielle aber komplette Implementierung findet sich hier [`lucidrains/DALLE-pytorch`](https://github.com/lucidrains/DALLE-pytorch).
 
-Öffentlich zugänglich war das Model nie, alternativ kann man aber
-[CrAIyon](https://www.craiyon.com) bzw. [`borisdayma/dalle-mini`](https://github.com/borisdayma/dalle-mini)
-verwenden, ein Versuch von {cite:t}`daymaDALLMini2021` DALL·E zu reproduzieren.
+Öffentlich zugänglich war das Model nie, alternativ kann man aber [CrAIyon](https://www.craiyon.com) bzw. [`borisdayma/dalle-mini`](https://github.com/borisdayma/dalle-mini) verwenden, ein Versuch von {cite:t}`daymaDALLMini2021`, DALL·E zu reproduzieren.
 
 ### CLIP
 
@@ -78,25 +62,16 @@ verwenden, ein Versuch von {cite:t}`daymaDALLMini2021` DALL·E zu reproduzieren.
 - [ ] Was ist CLIP und wofuer wird es verwendet?
 :::
 
-OpenAI's *Contrastive Language Image Pretraining (CLIP)* von wurde am 26.
-Februar 2021 vorgestellt in
-"Learning Transferable Visual Models From Natural Language Supervision"
-von {cite:t}`radfordLearningTransferableVisual2021`.
+OpenAI's *Contrastive Language Image Pretraining (CLIP)* von wurde am 26. Februar 2021 vorgestellt in "Learning Transferable Visual Models From Natural Language Supervision" von {cite:t}`radfordLearningTransferableVisual2021`.
 
 ```{figure} attachments/clip-overview-a.svg
 Illustration of the CLIP Training.  
 Source: {cite}`radfordLearningTransferableVisual2021`.
 ```
 
-CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings
-umwandelt und ein weiterer der Bilder in Bild Embeddings umwandelt.
+CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings umwandelt und ein weiterer der Bilder in Bild Embeddings umwandelt.
 
-Fuer einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle
-Text Embeddings allen Image Embeddings gegenübergestellt.
-CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen
-Image-Text Paare zu identifizieren die korrekt sind.
-Verwendet wird hierbei die *Cosine Similarity*, diese soll für die
-korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
+Fuer einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
 
 ### GLIDE
 
@@ -118,21 +93,11 @@ Source: [Alex Nichol](https://aqnichol.com/) {cite}`rameshHowDALLWorks`.
 
 :::
 
-Diffusion Modelle sind Generative Modelle, sie generieren Daten ähnlich
-zu den Trainingsdaten mit denen sie trainiert wurden.
-Vorgestellt wurden sie von {cite:t}`hoDenoisingDiffusionProbabilistic2020`
-mit Inspiration aus den "nonequilibrium thermodynamics".
+Diffusion Modelle sind Generative Modelle, sie generieren Daten ähnlich zu den Trainingsdaten mit denen sie trainiert wurden. Vorgestellt wurden sie von {cite:t}`hoDenoisingDiffusionProbabilistic2020` mit Inspiration aus den "nonequilibrium thermodynamics".
 
-Das Model korrumpiert zuerst die Daten durch Aufaddieren von
-Gaussian Noise und wird dann darauf trainiert die Daten wiederherzustellen.
-Gelernt wird also der Reverse Process oder auch Denoising Process, daher
-auch der Name Denoising Diffusion Probabilistic Models (DDPM).
-Sobald das Training abgeschlossen ist, kann man neue Daten generieren,
-indem man einfach Rauschen auf das Model gibt.
+Das Model korrumpiert zuerst die Daten durch Aufaddieren von Gaussian Noise und wird dann darauf trainiert die Daten wiederherzustellen. Gelernt wird also der Reverse Process oder auch Denoising Process, daher auch der Name Denoising Diffusion Probabilistic Models (DDPM). Sobald das Training abgeschlossen ist, kann man neue Daten generieren, indem man einfach Rauschen auf das Model gibt.
 
-Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass
-kein Adversarial Training erforderlich ist. Jedoch erfordern sie
-längere Inferenzzeiten.
+Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Jedoch erfordern sie längere Inferenzzeiten.
 
 ## OpenAI DALL·E-2
 
