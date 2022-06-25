@@ -9,13 +9,17 @@ read, website worth visiting, videos worth watching, ...
 of photorealism. Fidelity captures how plausible an image looks while
 diversity would be how many different kinds of images a model can create.
 
-## Guidance in Diffusion
+## Diffusion Guidance
 
 :::{note}
 Bonus Content
 :::
 
+## The AR Prior of DALL·E 2
 
+:::{note}
+In case someone asks
+:::
 
 ## Further Work
 

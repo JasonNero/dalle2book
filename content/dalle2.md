@@ -10,7 +10,7 @@ Email: [js450@hdm-stuttgart.de](mailto:js450@hdm-stuttgart.de)
 *Image Generation* beschreibt den Task neue Bilder aus einem gelernten Datensatz zu generieren. *Text-To-Image (TTI)* ist ein Subtask und beschreibt *Conditional Image Generation*, also die Generierung von Samples unter der Bedingung eines Labels $p(y|x)$.
 *Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch Generierung von Daten ausserhalb des Trainingsdatensatzes.
 
-Hauefig wird TTI in Verbindung gebracht mit *Generative Adversarial Nets (GAN)*, seit Kurzem jedoch auch verstärkt mit *Denoising Diffusion Models*, worauf u.a. auch DALL·E 2 basiert.
+Häufig wird TTI in Verbindung gebracht mit *Generative Adversarial Nets (GAN)*, seit Kurzem jedoch auch verstärkt mit *Denoising Diffusion Models*, worauf u.a. auch DALL·E 2 basiert.
 
 ## Recent Work
 
@@ -68,6 +68,10 @@ CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings umwandelt und 
 
 Fuer einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
 
+```{note}
+- [ ] Einbauen, dass "the CLIP training process, through which **we learn a joint representation space for text and images**." (aus DALLE2 Paper)
+```
+
 ### GLIDE
 
 ```{figure} attachments/diffusion.gif
@@ -94,7 +98,7 @@ Das Model korrumpiert zuerst die Daten durch Aufaddieren von Gaussian Noise und 
 
 Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Jedoch erfordern sie längere Inferenzzeiten.
 
-## OpenAI DALL·E 2
+## DALL·E 2
 
 ```{figure} attachments/dalle2explained_polarbear.gif
 ---
@@ -167,7 +171,7 @@ In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestell
 Ähnlich wie bei DALL·E, wurde kein Code des Models veröffentlicht, deshalb wurde von der Open-Source Community ein Versuch gestartet, DALL·E 2 (bzw. das im Paper spezifizierte unCLIP) zu reproduzieren, es gibt also eine inoffizielle Implementierung in dem GitHub Repository [`lucidrains/DALLE2-pytorch`](https://github.com/lucidrains/DALLE2-pytorch).
 Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Community des AI Vereins [LAION](https://laion.ai/#top) einen ersten [Prior](https://huggingface.co/zenglishuci/conditioned-prior) und auch erste Testruns des [Decoders](https://wandb.ai/veldrovive/dalle2_train_decoder) sind in der Community zu finden.
 
-### API Access
+### Access
 
 Unter den Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen pro Woche {cite}`DALLResearchPreview2022`.
 
@@ -196,13 +200,50 @@ Allerdings geschieht das Filtering von Input Text und Bild unabhängig voneinand
 - [ ] Darstellung von Text
 - [ ] Geographisches und Zeitliches Wissen
 - [ ] Details
+- [ ] removeme: {cite}`nicholImprovedDenoisingDiffusion2021`
 :::
 
 ### Architecture
 
-CLIP (ViT-H/16)
+Wie oben bereits beschrieben besteht DALL·E 2 aus 2 Komponenten:
+
+- Der *Prior* $P(z_i|y)$ produziert CLIP Image Embeddings $z_i$ unter der Bedingung einer Caption $y$.
+- Der *Decoder* $P(x|z_i,y)$ produziert Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, was aber hier ungenutzt bleibt)
+
+Beide zusammen ergeben ein Generative Model $P(x|y)$ für die Bilder $x$ mit gegebenen Captions $y$:
+
+```{math}
+\begin{align*}
+P( x | y ) &= P(x, z_i | y) \\
+&= P(x | z_i, y)P(z_i|y)
+\end{align*}
+```
+
+Die erste Zeile hält die Gleichheit weil $z_i$ eine deterministische Funktion von $x$ ist. In der zweiten Zeile wird lediglich nach der Kettenregel umgeformt.
+Daraus ergibt sich, dass man aus der echten Verteilung $P(x|y)$ samplen kann indem man erst $z_i$ mit dem Prior sampled und dann $x$ mit dem Decoder.
 
 #### Prior
+
+Der Prior generiert aus dem Labeln $y$ ein CLIP Image Embedding $z_i$.
+Hierfuer haben die Autoren zwei verschiedene Model Klassen getestet, einen Autoregressive (AR) Prior und einen Diffusion Prior. Letzterer wurde als effizienter und hochwertiger befunden und im Folgenden genauer betrachtet.
+
+<!-- ##### AR Prior -->
+
+##### Diffusion Prior
+
+:::{note}
+
+- Basically the GLIDE Diffusion Model
+- Decoder-Only Transformer with Casual Attention Mask
+- Sequence:
+  - encoded(? glide encoded?) text
+  - clip text embedding
+  - embedding for the diffusion timestep
+  - noised clip embedding
+  - final embedding(??)
+- improve quality by sampling twice and choosing the one with higher dot product
+- error function
+:::
 
 #### Decoder and Upsampler
 
