@@ -7,7 +7,7 @@ Email: [js450@hdm-stuttgart.de](mailto:js450@hdm-stuttgart.de)
 
 ## Introduction Text-To-Image
 
-*Image Generation* beschreibt den Task neue Bilder aus einem gelernten Datensatz zu generieren. *Text-To-Image (TTI)* ist ein Subtask und beschreibt *Conditional Image Generation*, also die Generierung von Samples unter der Bedingung eines Labels $p(y|x)$.
+*Image Generation* beschreibt den Task neue Bilder aus einem gelernten Datensatz zu generieren. *Text-To-Image (TTI)* ist ein Subtask und beschreibt *Conditional Image Generation*, also die Generierung von Samples unter der Bedingung eines Labels $p(x|y)$.
 *Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch Generierung von Daten ausserhalb des Trainingsdatensatzes.
 
 Häufig wird TTI in Verbindung gebracht mit *Generative Adversarial Nets (GAN)*, seit Kurzem jedoch auch verstärkt mit *Denoising Diffusion Models*, worauf u.a. auch DALL·E 2 basiert.
