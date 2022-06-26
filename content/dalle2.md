@@ -40,20 +40,39 @@ gantt
 
 ### DALL·E
 
-:::{note}
-
-- [ ] Titelbild des Papers einbinden?
-- [ ] Beispielbilder
-
-:::
-
-Der namentliche Vorgaenger zu DALL·E 2 wurde am 5. Januar 2021 in einem [OpenAI Blog Eintrag](https://openai.com/blog/dall-e/) vorgestellt und einige Wochen spaeter, am 24. Februar 2021, wurde das Paper eingereicht mit dem Titel "Zero-Shot Text-to-Image Generation" {cite}`rameshZeroShotTexttoImageGeneration2021`.
+Der namentliche Vorgaenger zu DALL·E 2 wurde am 5. Januar 2021 in einem [OpenAI Blog Eintrag](https://openai.com/blog/dall-e/) vorgestellt und einige Wochen später, am 24. Februar 2021, wurde das Paper eingereicht mit dem Titel "Zero-Shot Text-to-Image Generation" {cite}`rameshZeroShotTexttoImageGeneration2021`.
 
 DALL·E besteht aus zwei Modulen: dem *Discrete Variational Autoencoder (dVAE)* und einem *Decoder-Only Sparse Transformer*. Letzterer basiert nach eigenen Angaben auf einer Variante von GPT-3.
 
 Lediglich der Code des dVAE Moduls wurde von OpenAI auf GitHub veröffentlicht unter [`openai/DALL-E`](https://github.com/openai/DALL-E). Eine inoffizielle aber komplette Implementierung findet sich hier [`lucidrains/DALLE-pytorch`](https://github.com/lucidrains/DALLE-pytorch).
 
 Öffentlich zugänglich war das Model nie, alternativ kann man aber [CrAIyon](https://www.craiyon.com) bzw. [`borisdayma/dalle-mini`](https://github.com/borisdayma/dalle-mini) verwenden, ein Versuch von {cite:t}`daymaDALLMini2021`, DALL·E zu reproduzieren.
+
+Folgende Eigenschaften von DALL·E sind herauszustellen:
+
+- Variable Binding: Korrektes Zuweisen von Attributen ({numref}`dalle1-var-fig`)
+- Mehrere Objekte in einem Bild ({numref}`dalle1-var-fig`)
+- Beachtung von Perspektive ({numref}`dalle1-persp-fig`)
+- Interne und Externe Objektstrukturen ({numref}`dalle1-struct-fig`)
+- Zeitliches und geographisches Wissen
+
+```{figure} attachments/dalle1_variable_binding.png
+:name: dalle1-var-fig
+DALL·E - Multiple Objects and Variable Binding Examples.  
+https://openai.com/blog/dall-e/.
+```
+
+```{figure} attachments/dalle1_perspective.png
+:name: dalle1-persp-fig
+DALL·E - Perspective Examples.  
+https://openai.com/blog/dall-e/.
+```
+
+```{figure} attachments/dalle1_structures.png
+:name: dalle1-struct-fig
+DALL·E - Perspective Examples.  
+https://openai.com/blog/dall-e/.
+```
 
 (CLIP)=
 ### CLIP
@@ -84,35 +103,29 @@ wird umgeformt um die Cosine Similarity $S_C$ zu erhalten
 ```{math}
 S_C(\mathbf{a}, \mathbf{b}) := \cos{\theta} = \frac{\mathbf{a} \cdot \mathbf{b}}{\| \mathbf{a} \|_2 \| \mathbf{b} \|_2}
 ```
-
-
 ````
 
 (GLIDE)=
 ### GLIDE
 
-:::{note}
+GLIDE ist ein weiteres TTI Model von OpenAI und wurde in dem Paper *"GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models"* von {cite:t}`nicholGLIDEPhotorealisticImage2022` vorgestellt.
 
-- [ ] GLIDE vorstellen
+Zwar bekam GLIDE keinen eigenen Blog Eintrag auf der OpenAI Website, dafür wurde aber der Code offiziell auf GitHub veröffentlicht unter [`openai/glide-text2im`](https://github.com/openai/glide-text2im). Neben Checkpoints für eine kleinere Version, genannt *"GLIDE (filtered)"*, gibt es dort auch Notebooks zur Inferenz von Text-To-Image und Inpainting.
 
-:::
-
-```{figure} attachments/diffusion.gif
----
-height: 256px
----
-
-Illustration of the Reverse Diffusion Process.  
-[Alex Nichol](https://aqnichol.com/) {cite}`rameshHowDALLWorks`.
-```
+Trainiert wurde diese kleine Version mit aggressiv gefilterten Trainingsdaten, um Gewalt und Hass Symbole zu entfernen. Sogar Humanoiden wurden komplett entfernt. Durch die relativ kleine Grösse scheitert GLIDE (filtered) jedoch häufig an Variable Binding.
 
 #### Basics of Denoising Diffusion Probabilistic Models (DDPM)
 
+:::{figure} attachments/diffusion.gif
+:height: 256px
+
+Illustration of the Reverse Diffusion Process. [Alex Nichol](https://aqnichol.com/) {cite}`rameshHowDALLWorks`.
+:::
+
 :::{note}
 
-- [ ] Markov Chain mit einbringen
+- [ ] **Markov Chain**
 - [ ] (ELBO Loss Function einbauen und erklaeren?)
-
 :::
 
 Diffusion Modelle sind Generative Modelle, sie generieren Daten ähnlich zu den Trainingsdaten mit denen sie trainiert wurden. Vorgestellt wurden sie von {cite:t}`hoDenoisingDiffusionProbabilistic2020` mit Inspiration aus den "nonequilibrium thermodynamics".
@@ -137,42 +150,84 @@ https://openai.com/dall-e-2/.
 
 DALL·E 2 war bis zur Veröffentlichung von Googles Imagen State of the Art im Bereich Text-To-Image.
 
-```{figure} attachments/dalle1vs2.png
----
-name: dalle1vs2-fig
-height: 256px
----
+:::::{grid}
+:gutter: 2
 
-DALL·E-1 vs. DALL·E 2: "a painting of a fox sitting in a field at sunrise in the style of Claude Monet”  
+::::{grid-item}
+:::{figure} attachments/dalle1_fox.jpg
+:name: dalle1-fox-fig
+
+DALL·E 1: "a painting of a fox sitting in a field at sunrise in the style of Claude Monet”
 https://openai.com/dall-e-2/.
-```
+:::
+::::
 
-Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1vs2-fig`).
-Es besitzt aber neben *Text-to-Image* auch noch weitere Fähigkeiten:
+::::{grid-item}
+:::{figure} attachments/glide_fox.png
+:name: glide-fox-fig
+
+GLIDE: "a painting of a fox in the style of starry night” {cite}`nicholGLIDEPhotorealisticImage2022`
+:::
+::::
+::::{grid-item}
+:::{figure} attachments/dalle2_fox.jpg
+:name: dalle2-fox-fig
+
+DALL·E 2: "a painting of a fox sitting in a field at sunrise in the style of Claude Monet”
+https://openai.com/dall-e-2/.
+:::
+::::
+:::::
+
+Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1-fox-fig` vs. {numref}`dalle2-fox-fig`).
+
+Tatsächlich ist DALL·E 2 aber eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text, nun auf CLIP Image Embeddings trainiert wird. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren, daher auch der Name *"unCLIP"*.
+
+Neben *Text-to-Image* besitzt DALL·E 2 aber auch noch weitere Fähigkeiten:
 
 - Editieren von Bildern durch **Inpainting** (siehe {numref}`inpainting1-fig` und {numref}`inpainting2-fig`),
-- **Varianten** eines Input Bildes erzeugen und
-- **Text Diffs** anwenden um ein Bild zu manipulieren.
+- **Varianten** eines Input Bildes erzeugen (siehe {numref}`variations-fig` und
+- **Text Diffs**: language-guided Manipulation im Latent Space (siehe {numref}`textdiff-fig`).
 
-```{figure} attachments/dalle2explained_cat_inpainting.gif
----
-height: 256px
-name: inpainting1-fig
----
+:::::{grid}
+:gutter: 2
+
+::::{grid-item}
+:columns: 6
+
+:::{figure} attachments/dalle2explained_cat_inpainting.gif
+:name: inpainting1-fig
 
 DALL·E 2 replacing a dog with a cat via Inpainting.  
 https://openai.com/dall-e-2/.
-```
+:::
+::::
+::::{grid-item}
+:columns: 6
 
-```{figure} attachments/dalle2explained_mona_inpainting.gif
----
-height: 256px
-name: inpainting2-fig
----
+:::{figure} attachments/dalle2explained_mona_inpainting.gif
+:name: inpainting2-fig
 
 DALL·E 2 giving Mona Lisa a mohawk via Inpainting.  
 https://openai.com/dall-e-2/.
-```
+:::
+::::
+:::::
+
+:::{figure} attachments/dalle2_fox_variants.png
+:name: variations-fig
+:height: 256px
+
+DALL·E 2 Variations on "a painting of a fox sitting in a field at sunrise in the style of Claude Monet". Created by myself with DALL·E 2: https://labs.openai.com/s/fb5LwnfumVDJ5NbNFiql16XJ
+:::
+
+
+:::{figure} attachments/textdiff_house.gif
+:name: textdiff-fig
+:height: 256px
+
+DALL·E 2 Textdiff {cite}`rameshHowDALLWorks`: $(\text{image of victorian house}) + \text{"a modern house"} − \text{"a victorian house"}$
+:::
 
 Initial bekamen 400 ausgewählte Personen Zugriff auf eine API über die Inferenzen durchgeführt werden können und über eine Waitlist werden weitere Nutzer zugelassen. Stand 18. Mai 2022 wurden bereits 3 Millionen Bilder generiert und es sollen $\approx 1000$ neue Nutzer pro Woche freigeschaltet werden {cite}`DALLResearchPreview2022`.
 
@@ -194,6 +249,8 @@ In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestell
 
 Ähnlich wie bei DALL·E, wurde kein Code des Models veröffentlicht, deshalb wurde von der Open-Source Community ein Versuch gestartet, DALL·E 2 (bzw. das im Paper spezifizierte unCLIP) zu reproduzieren, es gibt also eine inoffizielle Implementierung in dem GitHub Repository [`lucidrains/DALLE2-pytorch`](https://github.com/lucidrains/DALLE2-pytorch).
 Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Community des AI Vereins [LAION](https://laion.ai/#top) einen ersten [Prior](https://huggingface.co/zenglishuci/conditioned-prior) und auch erste Testruns des [Decoders](https://wandb.ai/veldrovive/dalle2_train_decoder) sind in der Community zu finden.
+
+[ThisImageDoesNotExist](https://thisimagedoesnotexist.com) ist eine kleine Demo bei der man raten muss welche Bilder von einem Menschen sind und welche von DALL·E 2 generiert wurden. Der Durchschnitt liegt bei 18/30 korrekt zugeordneten Bildern.
 
 ### Access
 
@@ -257,15 +314,13 @@ Man kann also aus der echten Verteilung $P(x|y)$ samplen, indem man erst $z_i$ m
 
 Was bisher nicht erwähnt wurde sind die 2 Upsampling Diffusion Models:
 
-- $64^2 \rightarrow 256^2$
-- $256^2 \rightarrow 1024^2$
+- $64 \times 64 \rightarrow 256 \times 256$ und
+- $256 \times 256 \rightarrow 1024 \times 1024$
 
 #### Prior
 
 Der Prior generiert aus dem Labeln $y$ ein CLIP Image Embedding $z_i$.
 Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Autoregressive (AR)* Prior und einen *Diffusion* Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.
-
-<!-- ##### AR Prior -->
 
 ##### Diffusion Prior
 

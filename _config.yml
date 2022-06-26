@@ -3,7 +3,7 @@
 
 title: DALL·E 2 Presentation
 author: Jason Schuehlein (js450)
-# logo: logo.png
+logo: content/attachments/signature_closeup.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
