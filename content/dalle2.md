@@ -55,6 +55,7 @@ Lediglich der Code des dVAE Moduls wurde von OpenAI auf GitHub veröffentlicht u
 
 Öffentlich zugänglich war das Model nie, alternativ kann man aber [CrAIyon](https://www.craiyon.com) bzw. [`borisdayma/dalle-mini`](https://github.com/borisdayma/dalle-mini) verwenden, ein Versuch von {cite:t}`daymaDALLMini2021`, DALL·E zu reproduzieren.
 
+(CLIP)=
 ### CLIP
 
 OpenAI's *Contrastive Language Image Pretraining (CLIP)* von wurde am 26. Februar 2021 vorgestellt in "Learning Transferable Visual Models From Natural Language Supervision" von {cite:t}`radfordLearningTransferableVisual2021`.
@@ -68,11 +69,33 @@ CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings umwandelt und 
 
 Fuer einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
 
-```{note}
-- [ ] Einbauen, dass "the CLIP training process, through which **we learn a joint representation space for text and images**." (aus DALLE2 Paper)
+Effektiv lernt CLIP ein *"joint representation space for text and images"*.
+
+````{admonition} Refresher: Cosine Similarity
+:class: dropdown
+Das Skalarprodukt
+
+```{math}
+\mathbf{a} \cdot \mathbf{b} = \| \mathbf{a} \|_2 \| \mathbf{b} \|_2 \cos{\theta}
 ```
 
+wird umgeformt um die Cosine Similarity $S_C$ zu erhalten
+
+```{math}
+S_C(\mathbf{a}, \mathbf{b}) := \cos{\theta} = \frac{\mathbf{a} \cdot \mathbf{b}}{\| \mathbf{a} \|_2 \| \mathbf{b} \|_2}
+```
+
+
+````
+
+(GLIDE)=
 ### GLIDE
+
+:::{note}
+
+- [ ] GLIDE vorstellen
+
+:::
 
 ```{figure} attachments/diffusion.gif
 ---
@@ -83,12 +106,12 @@ Illustration of the Reverse Diffusion Process.
 [Alex Nichol](https://aqnichol.com/) {cite}`rameshHowDALLWorks`.
 ```
 
-#### Denoising Diffusion Probabilistic Models (DDPM)
+#### Basics of Denoising Diffusion Probabilistic Models (DDPM)
 
 :::{note}
 
 - [ ] Markov Chain mit einbringen
-- [ ] ELBO Loss Function einbauen und erklaeren?
+- [ ] (ELBO Loss Function einbauen und erklaeren?)
 
 :::
 
@@ -96,7 +119,8 @@ Diffusion Modelle sind Generative Modelle, sie generieren Daten ähnlich zu den 
 
 Das Model korrumpiert zuerst die Daten durch Aufaddieren von Gaussian Noise und wird dann darauf trainiert die Daten wiederherzustellen. Gelernt wird also der Reverse Process oder auch Denoising Process, daher auch der Name Denoising Diffusion Probabilistic Models (DDPM). Sobald das Training abgeschlossen ist, kann man neue Daten generieren, indem man einfach Rauschen auf das Model gibt.
 
-Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Jedoch erfordern sie längere Inferenzzeiten.
+Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Ausserdem ist die einzige Anforderung an die darunterliegende Architektur, dass Input und Output gleich gross sind.
+Allerdings erfordern Diffusion Modelle längere Inferenzzeiten.
 
 ## DALL·E 2
 
@@ -192,62 +216,106 @@ Allerdings geschieht das Filtering von Input Text und Bild unabhängig voneinand
 
 :::{note}
 
+- [ ] Fig 12 aus Paper - Comparison on COCO images
+  - dalle/glide/makeascene/unclip/unclip(prod)
 - [ ] Examples and abilities going further than just Text-To-Image.
-- [ ] nicht gut in variable-binding (spatiale Zuordnungen)
+- [ ] nicht gut in variable-binding (spatiale Zuordnungen) (Fig 14/15)
+- [ ] Darstellung von Text (Fig 16)
+- [ ] Details (Fig 17)
 - [ ] Perspektiven
 - [ ] Spiegelungen
 - [ ] Licht und Schatten
-- [ ] Darstellung von Text
 - [ ] Geographisches und Zeitliches Wissen
-- [ ] Details
-- [ ] removeme: {cite}`nicholImprovedDenoisingDiffusion2021`
 :::
 
 ### Architecture
 
-Wie oben bereits beschrieben besteht DALL·E 2 aus 2 Komponenten:
-
-- Der *Prior* $P(z_i|y)$ produziert CLIP Image Embeddings $z_i$ unter der Bedingung einer Caption $y$.
-- Der *Decoder* $P(x|z_i,y)$ produziert Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, was aber hier ungenutzt bleibt)
-
-Beide zusammen ergeben ein Generative Model $P(x|y)$ für die Bilder $x$ mit gegebenen Captions $y$:
-
-```{math}
-\begin{align*}
-P( x | y ) &= P(x, z_i | y) \\
-&= P(x | z_i, y)P(z_i|y)
-\end{align*}
+```{figure} attachments/hyperparameters.png
+:name: hyperparams-fig
+Hyperparameter {cite}`rameshHierarchicalTextConditionalImage2022`
 ```
 
-Die erste Zeile hält die Gleichheit weil $z_i$ eine deterministische Funktion von $x$ ist. In der zweiten Zeile wird lediglich nach der Kettenregel umgeformt.
-Daraus ergibt sich, dass man aus der echten Verteilung $P(x|y)$ samplen kann indem man erst $z_i$ mit dem Prior sampled und dann $x$ mit dem Decoder.
+Wie bereits beschrieben besteht DALL·E 2 aus 2 Komponenten:
+
+- Der *Prior* $P(z_i|y)$ erzeugt CLIP Image Embeddings $z_i$ unter gegebener Caption $y$.
+- Der *Decoder* $P(x|z_i,y)$ erzeugt Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, bleibt aber hier ungenutzt).
+
+Beide zusammen ergeben ein Generative Model $P(x|y)$ für die Bilder $x$ mit gegebenen Captions $y$. $P(x|y)$ kann geschrieben werden als
+
+```{math}
+P( x | y ) = P(x, z_i | y),
+```
+
+weil $z_i$ eine deterministische Funktion von $x$ ist. Weiter kann man mit der Kettenregel umformen und erhält
+
+```{math}
+P( x | y ) =  P(x, z_i | y) = P(x | z_i, y)P(z_i|y)
+
+```
+
+Man kann also aus der echten Verteilung $P(x|y)$ samplen, indem man erst $z_i$ mit dem Prior sampled und dann $x$ mit dem Decoder.
+
+Was bisher nicht erwähnt wurde sind die 2 Upsampling Diffusion Models:
+
+- $64^2 \rightarrow 256^2$
+- $256^2 \rightarrow 1024^2$
 
 #### Prior
 
 Der Prior generiert aus dem Labeln $y$ ein CLIP Image Embedding $z_i$.
-Hierfuer haben die Autoren zwei verschiedene Model Klassen getestet, einen Autoregressive (AR) Prior und einen Diffusion Prior. Letzterer wurde als effizienter und hochwertiger befunden und im Folgenden genauer betrachtet.
+Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Autoregressive (AR)* Prior und einen *Diffusion* Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.
 
 <!-- ##### AR Prior -->
 
 ##### Diffusion Prior
 
+Wie bereits im {ref}`GLIDE` Kapitel erwähnt ist eine Anforderung an Diffusion Modellen, dass Input und Output die gleiche Grösse haben, bei DALL·E 2 wird hier ein *Decoder-Only Transformer* mit *Casual Attention Mask* verwendet.
+
+Die Sequenz auf welcher der Transformer agiert besteht aus:
+
+- Tokenization des Text
+- CLIP Text Embedding der Tokens
+- Embedding des Diffusion Timesteps
+- Noised CLIP Image Embedding
+- "Final Embedding" welches verwendet wird um das Denoised CLIP Image Embedding vorherzusagen
+
+Um die Qualität zu verbessern, werden bei jedem Sampling je 2 $z_i$ Samples generiert und das ausgewählt welches das höhere $z_i \cdot z_t$ aufweist. Ein höheres Skalarprodukt der beiden Embeddings bedeutet dass die Caption das Bild besser beschreibt (vgl. Training von {ref}`CLIP`).
+
+Der verwendete Loss ist eine Vereinfachung von der von {cite:t}`hoDenoisingDiffusionProbabilistic2020` verwendeten Loss Function, es wird lediglich der Mean Squared Error zwischen echtem $z_i$ und der Vorhersage berechnet:
+
+```{math}
+L_{prior} = \mathbb{E}_{t \sim [1,T], z_i^{(t)} \sim q_t} [\|  f_{\theta}(z_i^{(t)}, t, y) - z_i \|^2]
+```
+
+#### Decoder
+
+```{note}
+
+- [ ] ist GLIDE auch ein Transformer oder ein UNet?
+- [ ] Fig zu Variable Binding hier referenzieren
+- [ ] Classifier-free Guidance
+```
+
+Der Decoder der in DALL·E 2 Verwendung findet ist eine leichte Modifikation des Diffusions Models {ref}`GLIDE` von {cite:t}`nicholGLIDEPhotorealisticImage2022`.
+Zur Erinnerung: GLIDE generiert Bilder direkt aus Text Embeddings, ohne Umweg über CLIP Embeddings.
+Um diese nun bei gleichbleibender Architektur verwenden zu können, werden die CLIP Embeddings in das existierende Timestep Embedding projiziert. Ausserdem werden sie auch noch in 4 extra Token projiziert die an die Text Tokens des GLIDE Text Encoders angehängt werden.
+
+Die Autoren entschieden sich für das Beibehalten des *"text-conditioning pathway"*s des GLIDE Decoders unter der Annahme dass das Diffusion Model dadurch Aspekte von Natural Language lernen könnte, die CLIP nicht erfasst, wie beispielsweise Variable Binding (siehe {numref}`variable-binding-fig`). Letztendlich wird er in DALL·E 2 aber nicht verwendet, weil er zu keinen merklichen Verbesserungen führte.
+
+Durch sog. *Classifier-free Guidance* wurde die Sampling Qualität weiter verbessert, vorgestellt wurde diese Technik von {cite:t}`hoClassifierFreeDiffusionGuidance2021`.
+
+#### Upsampler
+
+Die Diffusion Upsampler ($64^2 \rightarrow 256^2$ und $256^2 \rightarrow 1024^2$) folgen der *Unconditional ADMNet* Architektur aus "Diffusion Models Beat GANs on Image Synthesis" von {cite:t}`dhariwalDiffusionModelsBeat2021`.
+
+Trainiert wurden die ADMNets auf leicht korrumpierten Bildern um die Qualitaet des Upsamplings zu verbessern. In Experimenten hat sich ausserdem gezeigt, dass eine Konditionierung auf die Bild Captions keinen sichtbaren Verbesserungen mit sich bringt.
+
+#### Experiments
+
 :::{note}
 
-- Basically the GLIDE Diffusion Model
-- Decoder-Only Transformer with Casual Attention Mask
-- Sequence:
-  - encoded(? glide encoded?) text
-  - clip text embedding
-  - embedding for the diffusion timestep
-  - noised clip embedding
-  - final embedding(??)
-- improve quality by sampling twice and choosing the one with higher dot product
-- error function
+- [ ] Kurz Fig 8 im Paper ansprechen, unterschiedliche Conditioning signals
 :::
-
-#### Decoder and Upsampler
-
-Der Decoder der in DALL·E 2 Verwendung findet ist eine leichte Modifikation des Diffusions Models GLIDE von {cite:t}`nicholGLIDEPhotorealisticImage2022`.
 
 ### Training
 
@@ -258,6 +326,11 @@ Der Trainingsdatensatz besteht aus 2 Teilen:
 - und dem DALL·E Datensatz $\approx 250M$ {cite}`rameshZeroShotTexttoImageGeneration2021`
 
 Der CLIP Encoder wurde auf beiden trainiert. Prior, Decoder und Upsampler hingegen nur auf letzterem.
+
+:::{note}
+
+- [ ] CLIP Model wird eingefroren!
+:::
 
 ### Explorations of the Latent Space
 
