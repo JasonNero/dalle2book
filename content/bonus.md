@@ -34,3 +34,9 @@ Bonus Content
 :::{note}
 Bonus Content
 :::
+
+### Google Parti
+
+:::{note}
+Vergleich herstellen zu GLIDE und DALLE2
+:::

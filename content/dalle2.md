@@ -34,13 +34,13 @@ gantt
         VQGAN-CLIP          :milestone, 2022-04-18,
         CogView 2           :milestone, 2022-04-28,
     section Google
-        Imagen              :milestone, active, 2022-05-13,
-        Parti               :milestone, active, 2022-06-22,
+        Imagen              :milestone, 2022-05-13,
+        Parti               :milestone, 2022-06-22,
 :::
 
 ### DALL·E
 
-Der namentliche Vorgaenger zu DALL·E 2 wurde am 5. Januar 2021 in einem [OpenAI Blog Eintrag](https://openai.com/blog/dall-e/) vorgestellt und einige Wochen später, am 24. Februar 2021, wurde das Paper eingereicht mit dem Titel "Zero-Shot Text-to-Image Generation" {cite}`rameshZeroShotTexttoImageGeneration2021`.
+Der namentliche Vorgänger zu DALL·E 2 wurde am 5. Januar 2021 in einem [OpenAI Blog Eintrag](https://openai.com/blog/dall-e/) vorgestellt und mehrere Wochen später, am 24. Februar 2021, wurde das Paper eingereicht mit dem Titel ["Zero-Shot Text-to-Image Generation"](http://arxiv.org/abs/2102.12092) {cite}`rameshZeroShotTexttoImageGeneration2021`.
 
 DALL·E besteht aus zwei Modulen: dem *Discrete Variational Autoencoder (dVAE)* und einem *Decoder-Only Sparse Transformer*. Letzterer basiert nach eigenen Angaben auf einer Variante von GPT-3.
 
@@ -50,7 +50,7 @@ Lediglich der Code des dVAE Moduls wurde von OpenAI auf GitHub veröffentlicht u
 
 Folgende Eigenschaften von DALL·E sind herauszustellen:
 
-- Variable Binding: Korrektes Zuweisen von Attributen ({numref}`dalle1-var-fig`)
+- **Variable Binding**: Korrektes Zuweisen von Attributen zu Objekten ({numref}`dalle1-var-fig`)
 - Mehrere Objekte in einem Bild ({numref}`dalle1-var-fig`)
 - Beachtung von Perspektive ({numref}`dalle1-persp-fig`)
 - Interne und Externe Objektstrukturen ({numref}`dalle1-struct-fig`)
@@ -62,22 +62,32 @@ DALL·E - Multiple Objects and Variable Binding Examples.
 https://openai.com/blog/dall-e/.
 ```
 
-```{figure} attachments/dalle1_perspective.png
-:name: dalle1-persp-fig
-DALL·E - Perspective Examples.  
-https://openai.com/blog/dall-e/.
-```
+:::::{grid}
+:gutter: 2
 
-```{figure} attachments/dalle1_structures.png
-:name: dalle1-struct-fig
+::::{grid-item}
+:::{figure} attachments/dalle1_perspective.png
+:name: dalle1-persp-fig
+
 DALL·E - Perspective Examples.  
 https://openai.com/blog/dall-e/.
-```
+:::
+::::
+
+::::{grid-item}
+:::{figure} attachments/dalle1_structures.png
+:name: dalle1-struct-fig
+
+DALL·E - Perspective Examples.  
+https://openai.com/blog/dall-e/.
+:::
+::::
+:::::
 
 (CLIP)=
 ### CLIP
 
-OpenAI's *Contrastive Language Image Pretraining (CLIP)* von wurde am 26. Februar 2021 vorgestellt in "Learning Transferable Visual Models From Natural Language Supervision" von {cite:t}`radfordLearningTransferableVisual2021`.
+OpenAI's *Contrastive Language Image Pretraining (CLIP)* von wurde am 26. Februar 2021 vorgestellt in ["Learning Transferable Visual Models From Natural Language Supervision"](http://arxiv.org/abs/2103.00020) von {cite:t}`radfordLearningTransferableVisual2021`.
 
 ```{figure} attachments/clip-overview-a.svg
 Illustration of the CLIP Training.  
@@ -86,9 +96,9 @@ Illustration of the CLIP Training.
 
 CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings umwandelt und ein weiterer der Bilder in Bild Embeddings umwandelt.
 
-Fuer einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
+Für einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
 
-Effektiv lernt CLIP ein *"joint representation space for text and images"*.
+Effektiv lernt CLIP ein *"joint representation space"* für Texte und Bilder.
 
 ````{admonition} Refresher: Cosine Similarity
 :class: dropdown
@@ -108,7 +118,7 @@ S_C(\mathbf{a}, \mathbf{b}) := \cos{\theta} = \frac{\mathbf{a} \cdot \mathbf{b}}
 (GLIDE)=
 ### GLIDE
 
-GLIDE ist ein weiteres TTI Model von OpenAI und wurde in dem Paper *"GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models"* von {cite:t}`nicholGLIDEPhotorealisticImage2022` vorgestellt.
+GLIDE ist ein weiteres TTI Model von OpenAI und wurde am 20. Dezember 2021 in dem gleichnamigen Paper ["GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models"](http://arxiv.org/abs/2112.10741) von {cite:t}`nicholGLIDEPhotorealisticImage2022` vorgestellt.
 
 Zwar bekam GLIDE keinen eigenen Blog Eintrag auf der OpenAI Website, dafür wurde aber der Code offiziell auf GitHub veröffentlicht unter [`openai/glide-text2im`](https://github.com/openai/glide-text2im). Neben Checkpoints für eine kleinere Version, genannt *"GLIDE (filtered)"*, gibt es dort auch Notebooks zur Inferenz von Text-To-Image und Inpainting.
 
@@ -116,24 +126,24 @@ Trainiert wurde diese kleine Version mit aggressiv gefilterten Trainingsdaten, u
 
 #### Basics of Denoising Diffusion Probabilistic Models (DDPM)
 
-:::{figure} attachments/diffusion.gif
-:height: 256px
+Diffusion Modelle sind, wie auch GANs, Generative Modelle, sie generieren Daten ähnlich zu den Trainingsdaten mit denen sie trainiert wurden. Beschrieben wurden sie u.a. von {cite:t}`hoDenoisingDiffusionProbabilistic2020` mit Inspiration aus den "nonequilibrium thermodynamics".
 
-Illustration of the Reverse Diffusion Process. [Alex Nichol](https://aqnichol.com/) {cite}`rameshHowDALLWorks`.
+```{figure} attachments/diffusion_markov.png
+:name: markov-fig
+
+Forward $q(x_t|x_{t-1})$ and Backwards $p_{\theta}(x_{t-1}|x_t)$ Diffusion Process as a Markov Chain. {cite}`hoDenoisingDiffusionProbabilistic2020`
+```
+
+Ein Diffusion Model ist prinzipiell eine Markov Chain. In jedem Zeitschritt werden die Daten durch iteratives Aufaddieren von Gaussian Noise korrumpiert, bis nur noch Rauschen übrig ist. Das Netz wird dann darauf trainiert die Daten wiederherzustellen. Gelernt wird also der Reverse Diffusion Process oder auch Denoising, daher auch der Name Denoising Diffusion Probabilistic Models (DDPM). Sobald das Training abgeschlossen ist, kann man neue Daten generieren, indem man Rauschen auf das trainierte Model gibt und den Reverse Process ablaufen lässt.
+
+Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Ausserdem ist die Implementierung seht flexibel, denn die einzige Anforderung an die darunterliegende Architektur ist, dass Input und Output gleich gross sind.
+
+Nachteil der Diffusion Modelle gegenüber GANs sind jedoch die längeren Inferenzzeiten.
+
+:::{figure} attachments/denoising_different_steps.png
+
+DDPM applied on CelebA-HQ, showing the Reverse Process starting at different timesteps {cite}`hoDenoisingDiffusionProbabilistic2020`
 :::
-
-:::{note}
-
-- [ ] **Markov Chain**
-- [ ] (ELBO Loss Function einbauen und erklaeren?)
-:::
-
-Diffusion Modelle sind Generative Modelle, sie generieren Daten ähnlich zu den Trainingsdaten mit denen sie trainiert wurden. Vorgestellt wurden sie von {cite:t}`hoDenoisingDiffusionProbabilistic2020` mit Inspiration aus den "nonequilibrium thermodynamics".
-
-Das Model korrumpiert zuerst die Daten durch Aufaddieren von Gaussian Noise und wird dann darauf trainiert die Daten wiederherzustellen. Gelernt wird also der Reverse Process oder auch Denoising Process, daher auch der Name Denoising Diffusion Probabilistic Models (DDPM). Sobald das Training abgeschlossen ist, kann man neue Daten generieren, indem man einfach Rauschen auf das Model gibt.
-
-Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Ausserdem ist die einzige Anforderung an die darunterliegende Architektur, dass Input und Output gleich gross sind.
-Allerdings erfordern Diffusion Modelle längere Inferenzzeiten.
 
 ## DALL·E 2
 
@@ -149,6 +159,8 @@ https://openai.com/dall-e-2/.
 **DALL·E 2** wurde von OpenAI entwickelt und mit dem [Blog Post](https://openai.com/dall-e-2/) des Projekts am *06. April 2022* veroeffentlicht. Das dazugehörige Paper *[Hierarchical Text-Conditional Image Generation with CLIP Latents](https://arxiv.org/abs/2204.06125)* von {cite:t}`rameshHierarchicalTextConditionalImage2022` wurde eine Woche später am *13. April 2022* vorgelegt und beschreibt **unCLIP**, die grundlegende Architektur hinter DALL·E 2. Das Deployment dessen, die sog. **DALL·E 2 Preview** ist eine modifizierte *"production version"* {cite}`rameshHierarchicalTextConditionalImage2022`.
 
 DALL·E 2 war bis zur Veröffentlichung von Googles Imagen State of the Art im Bereich Text-To-Image.
+
+Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1-fox-fig` vs. {numref}`dalle2-fox-fig`).
 
 :::::{grid}
 :gutter: 2
@@ -179,15 +191,11 @@ https://openai.com/dall-e-2/.
 ::::
 :::::
 
-Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1-fox-fig` vs. {numref}`dalle2-fox-fig`).
-
-Tatsächlich ist DALL·E 2 aber eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text, nun auf CLIP Image Embeddings trainiert wird. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren, daher auch der Name *"unCLIP"*.
-
 Neben *Text-to-Image* besitzt DALL·E 2 aber auch noch weitere Fähigkeiten:
 
 - Editieren von Bildern durch **Inpainting** (siehe {numref}`inpainting1-fig` und {numref}`inpainting2-fig`),
-- **Varianten** eines Input Bildes erzeugen (siehe {numref}`variations-fig` und
-- **Text Diffs**: language-guided Manipulation im Latent Space (siehe {numref}`textdiff-fig`).
+- **Varianten** eines Input Bildes erzeugen (siehe {numref}`variations-fig`) und
+- **Text Diffs** - Durch Text gesteuerte Manipulation im Latent Space (siehe {numref}`textdiff-fig`).
 
 :::::{grid}
 :gutter: 2
@@ -247,27 +255,29 @@ In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestell
 - **Prior** um Text Embeddings in Image Embeddings umzuwandeln
 - **Decoder** um aus Image Embeddings ein Bild zu generieren
 
+Tatsächlich ist DALL·E 2 eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text Encodings, nun auf CLIP Image Embeddings trainiert wird. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren, daher auch der Name *"unCLIP"*.
+
 Ähnlich wie bei DALL·E, wurde kein Code des Models veröffentlicht, deshalb wurde von der Open-Source Community ein Versuch gestartet, DALL·E 2 (bzw. das im Paper spezifizierte unCLIP) zu reproduzieren, es gibt also eine inoffizielle Implementierung in dem GitHub Repository [`lucidrains/DALLE2-pytorch`](https://github.com/lucidrains/DALLE2-pytorch).
 Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Community des AI Vereins [LAION](https://laion.ai/#top) einen ersten [Prior](https://huggingface.co/zenglishuci/conditioned-prior) und auch erste Testruns des [Decoders](https://wandb.ai/veldrovive/dalle2_train_decoder) sind in der Community zu finden.
 
-[ThisImageDoesNotExist](https://thisimagedoesnotexist.com) ist eine kleine Demo bei der man raten muss welche Bilder von einem Menschen sind und welche von DALL·E 2 generiert wurden. Der Durchschnitt liegt bei 18/30 korrekt zugeordneten Bildern.
+[ThisImageDoesNotExist](https://thisimagedoesnotexist.com) ist eine kleine Demo bei der man raten muss welche Bilder von einem Menschen sind und welche von DALL·E 2 generiert wurden. Der Durchschnitt liegt bei $18/30$ korrekt zugeordneten Bildern.
 
 ### Access
 
-Unter den Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen pro Woche {cite}`DALLResearchPreview2022`.
+Unter den 400 Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen pro Woche {cite}`DALLResearchPreview2022`.
 
-Die Verwendung der API ist nur für persönliche, nicht-kommerzielle oder wissenschaftliche Zwecke zulässig. User müssen beim Posten von generierten Bildern eindeutig kennzeichnen ob und welcher Teil des Bildes von DALL·E 2 generiert wurde. Ausserdem enthält jedes generierte Bild ein kleines Wasserzeichen in der unteren rechten Bildecke (siehe {numref}`signature-fig`)
+Die Verwendung der API ist nur für persönliche, nicht-kommerzielle oder wissenschaftliche Zwecke zulässig. User müssen beim Posten von generierten Bildern eindeutig kennzeichnen ob und welcher Teil des Bildes von DALL·E 2 generiert wurde. Ausserdem enthält jedes generierte Bild ein kleines Wasserzeichen in der unteren rechten Bildecke (siehe {numref}`signature-fig`).
 
 ```{figure} attachments/signature_closeup.png
 ---
 name: signature-fig
 ---
-The DALL·E 2 signature present in every image it creates.
+The DALL·E 2 signature present in every image it creates via the API {cite}`mishkinDALLPreviewRisks2022`.
 ```
 
-Neben dem oben genannten Filtering auf den Trainingsdaten wird bei der API auch der Input gefiltert nach Kriterien wie "Sicherheitsbedenken" (sexualisierte oder suggestive Bilder von Kindern, Gewalt, politischer Content und "toxischer Content").
+Ausserdem filtert die API Input nach Kriterien wie z.B. Sicherheitsbedenken (sexualisierte oder suggestive Bilder von Kindern, Gewalt, politischer Content und "toxischer Content").
 
-Allerdings geschieht das Filtering von Input Text und Bild unabhängig voneinander. Demnach könnte man das Model anweisen Inpainting für ein Bild einer Dusche mit dem Text "a woman" zu machen, und dabei potenziell ein Bild einer nackten Frau generieren.
+Allerdings geschieht diese Filtering von Input Text und Input Bild unabhängig voneinander. Demnach könnte man das Model anweisen Inpainting für ein Bild einer Dusche mit dem Text "a woman" zu machen, und dabei potenziell ein Bild einer nackten Frau generieren.
 
 ### Capabilities and Limitations
 
@@ -334,9 +344,9 @@ Die Sequenz auf welcher der Transformer agiert besteht aus:
 - Noised CLIP Image Embedding
 - "Final Embedding" welches verwendet wird um das Denoised CLIP Image Embedding vorherzusagen
 
-Um die Qualität zu verbessern, werden bei jedem Sampling je 2 $z_i$ Samples generiert und das ausgewählt welches das höhere $z_i \cdot z_t$ aufweist. Ein höheres Skalarprodukt der beiden Embeddings bedeutet dass die Caption das Bild besser beschreibt (vgl. Training von {ref}`CLIP`).
+Um die Qualität zu verbessern, werden bei jedem Sampling je 2 $z_i$ Samples generiert und das Sample ausgewählt das ein höheres $z_i \cdot z_t$ aufweist. Ein höheres Skalarprodukt der beiden Embeddings bedeutet dass die Caption das Bild besser beschreibt (vgl. Training von {ref}`CLIP`).
 
-Der verwendete Loss ist eine Vereinfachung von der von {cite:t}`hoDenoisingDiffusionProbabilistic2020` verwendeten Loss Function, es wird lediglich der Mean Squared Error zwischen echtem $z_i$ und der Vorhersage berechnet:
+Der verwendete Loss ist eine Vereinfachung von der von {cite:t}`hoDenoisingDiffusionProbabilistic2020` verwendeten Loss Function bei DDPM, es wird lediglich der Mean Squared Error zwischen echtem $z_i$ und der Vorhersage berechnet:
 
 ```{math}
 L_{prior} = \mathbb{E}_{t \sim [1,T], z_i^{(t)} \sim q_t} [\|  f_{\theta}(z_i^{(t)}, t, y) - z_i \|^2]
@@ -346,46 +356,33 @@ L_{prior} = \mathbb{E}_{t \sim [1,T], z_i^{(t)} \sim q_t} [\|  f_{\theta}(z_i^{(
 
 ```{note}
 
-- [ ] ist GLIDE auch ein Transformer oder ein UNet?
-- [ ] Fig zu Variable Binding hier referenzieren
-- [ ] Classifier-free Guidance
+- [ ] UNet kurz erwaehnen, schliesslich heisst das Kapitel Architektur
 ```
 
 Der Decoder der in DALL·E 2 Verwendung findet ist eine leichte Modifikation des Diffusions Models {ref}`GLIDE` von {cite:t}`nicholGLIDEPhotorealisticImage2022`.
 Zur Erinnerung: GLIDE generiert Bilder direkt aus Text Embeddings, ohne Umweg über CLIP Embeddings.
-Um diese nun bei gleichbleibender Architektur verwenden zu können, werden die CLIP Embeddings in das existierende Timestep Embedding projiziert. Ausserdem werden sie auch noch in 4 extra Token projiziert die an die Text Tokens des GLIDE Text Encoders angehängt werden.
+Um diese Embeddings nun bei gleichbleibender Architektur in den Decoder einzubringen, werden die sie in das existierende Timestep Embedding projiziert. Ausserdem werden sie auch noch in 4 extra Token projiziert die an die Text Tokens des GLIDE Text Encoders angehängt werden.
 
-Die Autoren entschieden sich für das Beibehalten des *"text-conditioning pathway"*s des GLIDE Decoders unter der Annahme dass das Diffusion Model dadurch Aspekte von Natural Language lernen könnte, die CLIP nicht erfasst, wie beispielsweise Variable Binding (siehe {numref}`variable-binding-fig`). Letztendlich wird er in DALL·E 2 aber nicht verwendet, weil er zu keinen merklichen Verbesserungen führte.
+Die Autoren entschieden sich für das Beibehalten des "*text-conditioning pathway*" des GLIDE Decoders unter der Annahme, dass das Diffusion Model dadurch Aspekte von Natural Language lernen könnte, die CLIP nicht erfasst, wie beispielsweise Variable Binding. Letztendlich wird er in DALL·E 2 aber nicht verwendet, weil er zu keinen merklichen Verbesserungen führte.
 
 Durch sog. *Classifier-free Guidance* wurde die Sampling Qualität weiter verbessert, vorgestellt wurde diese Technik von {cite:t}`hoClassifierFreeDiffusionGuidance2021`.
 
 #### Upsampler
 
-Die Diffusion Upsampler ($64^2 \rightarrow 256^2$ und $256^2 \rightarrow 1024^2$) folgen der *Unconditional ADMNet* Architektur aus "Diffusion Models Beat GANs on Image Synthesis" von {cite:t}`dhariwalDiffusionModelsBeat2021`.
+Die Diffusion Upsampler ($64^2 \rightarrow 256^2$ und $256^2 \rightarrow 1024^2$) folgen der *Unconditional ADMNet* Architektur aus ["Diffusion Models Beat GANs on Image Synthesis"](http://arxiv.org/abs/2105.05233) von {cite:t}`dhariwalDiffusionModelsBeat2021`.
 
-Trainiert wurden die ADMNets auf leicht korrumpierten Bildern um die Qualitaet des Upsamplings zu verbessern. In Experimenten hat sich ausserdem gezeigt, dass eine Konditionierung auf die Bild Captions keinen sichtbaren Verbesserungen mit sich bringt.
+Trainiert wurden die ADMNets auf leicht korrumpierten Bildern um die Qualität des Upsamplings zu verbessern. In Experimenten hat sich ausserdem gezeigt, dass eine Konditionierung auf die Bild Captions keinen sichtbaren Verbesserungen mit sich bringt.
 
-#### Experiments
+### Trainingdata
 
-:::{note}
+Ähnlich wie schon bei GLIDE wurden die Trainingsdaten auf denen das Model trainiert wurde, gefiltert, um "explicit content" gering zu halten. Diesmal jedoch weniger aggressiv: Bilder und Captions die "grafische sexuelle sowie gewalttätige Inhalte" haben wurden entfernt, ebenso wie "Hate Symbols".
 
-- [ ] Kurz Fig 8 im Paper ansprechen, unterschiedliche Conditioning signals
-:::
-
-### Training
-
-Die Trainingsdaten auf denen OpenAI das Model trainiert hat, wurden gefiltert um "explicit content" gering zu halten. Bilder und Captions die "grafische sexuelle sowie gewalttätige Inhalte" haben wurden entfernt, ebenso wie "Hate Symbols". Bei OpenAIs GLIDE wurde ein ähnliches, aber aggressiveres Filtering durchgeführt bei dem auch Menschen im Allgemeinen entfernt wurden.
 Der Trainingsdatensatz besteht aus 2 Teilen:
 
 - dem CLIP Datensatz $\approx 400M$ {cite}`radfordLearningTransferableVisual2021`
 - und dem DALL·E Datensatz $\approx 250M$ {cite}`rameshZeroShotTexttoImageGeneration2021`
 
-Der CLIP Encoder wurde auf beiden trainiert. Prior, Decoder und Upsampler hingegen nur auf letzterem.
-
-:::{note}
-
-- [ ] CLIP Model wird eingefroren!
-:::
+Die CLIP Encoder wurden auf beiden trainiert und dann eingefroren. Prior, Decoder und Upsampler hingegen nur auf letzterem.
 
 ### Explorations of the Latent Space
 
@@ -397,15 +394,9 @@ Der CLIP Encoder wurde auf beiden trainiert. Prior, Decoder und Upsampler hingeg
 Show Benchmarks
 :::
 
-### Google Parti
-
-:::{note}
-Vergleich herstellen zu GLIDE und DALLE2
-:::
-
 ## Questions and Discussion
 
 :::{note}
-Was wuerdet ihr mit DALLE2 anfangen?
-Wo seht ihr potentielle Anwendungen?
+
+Was wuerdet ihr mit DALL·E 2 anfangen?
 :::
