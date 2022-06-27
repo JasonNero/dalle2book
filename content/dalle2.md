@@ -118,6 +118,11 @@ S_C(\mathbf{a}, \mathbf{b}) := \cos{\theta} = \frac{\mathbf{a} \cdot \mathbf{b}}
 (GLIDE)=
 ### GLIDE
 
+```{figure} attachments/glide_header.png
+
+Cherrypicked generations of GLIDE {cite}`nicholGLIDEPhotorealisticImage2022`.
+```
+
 GLIDE ist ein weiteres TTI Model von OpenAI und wurde am 20. Dezember 2021 in dem gleichnamigen Paper ["GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models"](http://arxiv.org/abs/2112.10741) von {cite:t}`nicholGLIDEPhotorealisticImage2022` vorgestellt.
 
 Zwar bekam GLIDE keinen eigenen Blog Eintrag auf der OpenAI Website, dafür wurde aber der Code offiziell auf GitHub veröffentlicht unter [`openai/glide-text2im`](https://github.com/openai/glide-text2im). Neben Checkpoints für eine kleinere Version, genannt *"GLIDE (filtered)"*, gibt es dort auch Notebooks zur Inferenz von Text-To-Image und Inpainting.
@@ -147,10 +152,13 @@ DDPM applied on CelebA-HQ, showing the Reverse Process starting at different tim
 
 ## DALL·E 2
 
+```{figure} attachments/dalle2_header.png
+
+Cherrypicked generations of DALL·E 2 {cite}`rameshHierarchicalTextConditionalImage2022`.
+```
+
 ```{figure} attachments/dalle2explained_polarbear.gif
----
-height: 256px
----
+:height: 256px
 
 DALL·E 2 creating an image of a polarbear playing bass.  
 https://openai.com/dall-e-2/.
@@ -224,11 +232,9 @@ https://openai.com/dall-e-2/.
 
 :::{figure} attachments/dalle2_fox_variants.png
 :name: variations-fig
-:height: 256px
 
 DALL·E 2 Variations on "a painting of a fox sitting in a field at sunrise in the style of Claude Monet". Created by myself with DALL·E 2: https://labs.openai.com/s/fb5LwnfumVDJ5NbNFiql16XJ
 :::
-
 
 :::{figure} attachments/textdiff_house.gif
 :name: textdiff-fig
@@ -258,7 +264,14 @@ In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestell
 Tatsächlich ist DALL·E 2 eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text Encodings, nun auf CLIP Image Embeddings trainiert wird. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren, daher auch der Name *"unCLIP"*.
 
 Ähnlich wie bei DALL·E, wurde kein Code des Models veröffentlicht, deshalb wurde von der Open-Source Community ein Versuch gestartet, DALL·E 2 (bzw. das im Paper spezifizierte unCLIP) zu reproduzieren, es gibt also eine inoffizielle Implementierung in dem GitHub Repository [`lucidrains/DALLE2-pytorch`](https://github.com/lucidrains/DALLE2-pytorch).
-Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Community des AI Vereins [LAION](https://laion.ai/#top) einen ersten [Prior](https://huggingface.co/zenglishuci/conditioned-prior) und auch erste Testruns des [Decoders](https://wandb.ai/veldrovive/dalle2_train_decoder) sind in der Community zu finden.
+Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Community des AI Vereins [LAION](https://laion.ai/#top) einen ersten [Prior](https://huggingface.co/zenglishuci/conditioned-prior) und auch erste [Decoder](https://huggingface.co/Veldrovive/DA-VINC-E) sind in der Community zu finden.
+
+Ein erstes Inferenz Notebook der Community welches findet sich unter [`LAION-AI/dalle2-laion`](https://github.com/LAION-AI/dalle2-laion).
+
+```{figure} attachments/laion_dalle2_fox.png
+
+Inference on the same fox prompt as above, using [`LAION-AI/dalle2-laion`](https://github.com/LAION-AI/dalle2-laion). Inference Time: ~10min (Tesla T4).
+```
 
 [ThisImageDoesNotExist](https://thisimagedoesnotexist.com) ist eine kleine Demo bei der man raten muss welche Bilder von einem Menschen sind und welche von DALL·E 2 generiert wurden. Der Durchschnitt liegt bei $18/30$ korrekt zugeordneten Bildern.
 
@@ -279,28 +292,32 @@ Ausserdem filtert die API Input nach Kriterien wie z.B. Sicherheitsbedenken (sex
 
 Allerdings geschieht diese Filtering von Input Text und Input Bild unabhängig voneinander. Demnach könnte man das Model anweisen Inpainting für ein Bild einer Dusche mit dem Text "a woman" zu machen, und dabei potenziell ein Bild einer nackten Frau generieren.
 
-### Capabilities and Limitations
+### Limitations
 
-:::{note}
+Trotz des grossen Fortschritts in Fidelity und Diversity der Samples die DALL·E 2 generieren kann, hat es auch einige Limitationen. Ganz besonders ist es schlechter als GLIDE im Bereich Variable Binding (siehe {numref}`dalle2-variable-fig`). Die Hypothese der Autoren ist dass CLIP selbst keine expliziten Attributs Zuweisung modellieren kann.
+Aber auch detailreichere Szenen oder zusammenängenden Text (siehe {numref}`dalle2-text-fig`) schafft unCLIP nicht korrekt darzustellen.
 
-- [ ] Fig 12 aus Paper - Comparison on COCO images
-  - dalle/glide/makeascene/unclip/unclip(prod)
-- [ ] Examples and abilities going further than just Text-To-Image.
-- [ ] nicht gut in variable-binding (spatiale Zuordnungen) (Fig 14/15)
-- [ ] Darstellung von Text (Fig 16)
-- [ ] Details (Fig 17)
-- [ ] Perspektiven
-- [ ] Spiegelungen
-- [ ] Licht und Schatten
-- [ ] Geographisches und Zeitliches Wissen
-:::
+```{figure} attachments/dalle2_figure15.png
+:name: dalle2-variable-fig
+
+unCLIP confusing variable assignments {cite}`rameshHierarchicalTextConditionalImage2022`.
+```
+
+```{figure} attachments/dalle2_figure16.png
+:name: dalle2-text-fig
+
+unCLIP prompted with: "A sign that says deep learning." {cite}`rameshHierarchicalTextConditionalImage2022`.
+```
+
+In {numref}`dalle2-compared-fig` sieht man eine groessere Gegenueberstellung der bisherigen Text To Image Modelle.
+
+```{figure} attachments/dalle2_figure12.png
+:name: dalle2-compared-fig
+
+DALL·E vs GLIDE vs unCLIP on COCO {cite}`rameshHierarchicalTextConditionalImage2022`
+```
 
 ### Architecture
-
-```{figure} attachments/hyperparameters.png
-:name: hyperparams-fig
-Hyperparameter {cite}`rameshHierarchicalTextConditionalImage2022`
-```
 
 Wie bereits beschrieben besteht DALL·E 2 aus 2 Komponenten:
 
@@ -326,6 +343,12 @@ Was bisher nicht erwähnt wurde sind die 2 Upsampling Diffusion Models:
 
 - $64 \times 64 \rightarrow 256 \times 256$ und
 - $256 \times 256 \rightarrow 1024 \times 1024$
+
+```{figure} attachments/hyperparameters.png
+:name: hyperparams-fig
+
+Hyperparameters {cite}`rameshHierarchicalTextConditionalImage2022`
+```
 
 #### Prior
 
@@ -373,7 +396,7 @@ Die Diffusion Upsampler ($64^2 \rightarrow 256^2$ und $256^2 \rightarrow 1024^2$
 
 Trainiert wurden die ADMNets auf leicht korrumpierten Bildern um die Qualität des Upsamplings zu verbessern. In Experimenten hat sich ausserdem gezeigt, dass eine Konditionierung auf die Bild Captions keinen sichtbaren Verbesserungen mit sich bringt.
 
-### Trainingdata
+### Training Dataset
 
 Ähnlich wie schon bei GLIDE wurden die Trainingsdaten auf denen das Model trainiert wurde, gefiltert, um "explicit content" gering zu halten. Diesmal jedoch weniger aggressiv: Bilder und Captions die "grafische sexuelle sowie gewalttätige Inhalte" haben wurden entfernt, ebenso wie "Hate Symbols".
 
@@ -384,14 +407,35 @@ Der Trainingsdatensatz besteht aus 2 Teilen:
 
 Die CLIP Encoder wurden auf beiden trainiert und dann eingefroren. Prior, Decoder und Upsampler hingegen nur auf letzterem.
 
-### Explorations of the Latent Space
-
 ## Further Work
 
 ### Google Imagen
 
-:::{note}
-Show Benchmarks
+:::{figure} attachments/imagen_header.png
+
+A cherrypicked collection of Imagen generations {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
+:::
+
+Googles Imagen wurde am 13. Mai 2022 in dem Paper [Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding](http://arxiv.org/abs/2205.11487) {cite}`sahariaPhotorealisticTexttoImageDiffusion2022` vorgestellt und hat DALL·E 2 als State of The Art Model abgeloest.
+
+:::{figure} attachments/imagen_overview.png
+:height: 512px
+
+Overview of the Imagen architecture {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
+:::
+
+Imagen verzichtet hier also auf das "Layer of Indirection" über die CLIP Image Embeddings und trainiert auf einem mächtigen Text Encoder. Ausserdem sind hier die Super-Resolution Modelle tatsächlich Text-Conditional.
+
+:::{figure} attachments/imagen_dalle2_glide_backpack.png
+
+Imagen vs DALL·E 2 vs GLIDE: "A black apple and a green backpack.".  
+Adapted from {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
+:::
+
+:::{figure} attachments/imagen_dalle2_glide_text.png
+
+Imagen vs DALL·E 2 vs GLIDE: "A storefront with Text to Image written on it.".  
+Adapted from {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
 :::
 
 ## Questions and Discussion
