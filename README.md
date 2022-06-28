@@ -7,3 +7,8 @@ Make sure `sphinxcontrib-mermaid` is installed (via pip).
 To build, run `jb build --all .`
 
 For ease-of-use in vscode install the `MyST-Markdown` extension.
+
+## Zotero Settings
+
+Go to `Preferences > Better BibTeX > Export > BibTeX` and set `Add URLs to BibTeX export` to `url`.
+That way we get the full URLs in the Bibliography.

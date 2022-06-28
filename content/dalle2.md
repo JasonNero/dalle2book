@@ -220,25 +220,9 @@ https://openai.com/dall-e-2/.
 
 Neben *Text-to-Image* besitzt DALL·E 2 aber auch noch weitere Fähigkeiten:
 
-- Editieren von Bildern durch **Inpainting** (siehe {numref}`inpainting1-fig` und {numref}`inpainting2-fig`),
+- Editieren von Bildern durch **Inpainting** (siehe {numref}`inpainting2-fig`),
 - **Varianten** eines Input Bildes erzeugen (siehe {numref}`variations-fig`) und
 - **Text Diffs** - Durch Text gesteuerte Manipulation im Latent Space (siehe {numref}`textdiff-fig`).
-
-:::::{grid}
-:gutter: 2
-
-::::{grid-item}
-:columns: 6
-
-:::{figure} attachments/dalle2explained_cat_inpainting.gif
-:name: inpainting1-fig
-
-DALL·E 2 replacing a dog with a cat via Inpainting.  
-https://openai.com/dall-e-2/.
-:::
-::::
-::::{grid-item}
-:columns: 6
 
 :::{figure} attachments/dalle2explained_mona_inpainting.gif
 :name: inpainting2-fig
@@ -246,8 +230,6 @@ https://openai.com/dall-e-2/.
 DALL·E 2 giving Mona Lisa a mohawk via Inpainting.  
 https://openai.com/dall-e-2/.
 :::
-::::
-:::::
 
 :::{figure} attachments/dalle2_fox_variants.png
 :name: variations-fig
@@ -257,9 +239,8 @@ DALL·E 2 Variations on "a painting of a fox sitting in a field at sunrise in th
 
 :::{figure} attachments/textdiff_house.gif
 :name: textdiff-fig
-:height: 256px
 
-DALL·E 2 Textdiff {cite}`rameshHowDALLWorks`: $(\text{image of victorian house}) + \text{"a modern house"} − \text{"a victorian house"}$
+DALL·E 2 Text Diff {cite}`rameshHowDALLWorks`: $(\text{image of victorian house}) + \text{"a modern house"} − \text{"a victorian house"}$
 :::
 
 Initial bekamen 400 ausgewählte Personen Zugriff auf eine API über die Inferenzen durchgeführt werden können und über eine Waitlist werden weitere Nutzer zugelassen. Stand 18. Mai 2022 wurden bereits 3 Millionen Bilder generiert und es sollen $\approx 1000$ neue Nutzer pro Woche freigeschaltet werden {cite}`DALLResearchPreview2022`.
