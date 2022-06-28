@@ -362,21 +362,31 @@ Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Auto
 
 Wie bereits oben erwähnt ist eine Anforderung an Diffusion Modellen, dass Input und Output die gleiche Grösse haben, bei DALL·E 2 wird hier ein *Decoder-Only Transformer* mit *Casual Attention Mask* verwendet.
 
+Um die Qualität zu verbessern, werden bei jedem Sampling je 2 $z_i$ Samples generiert und das Sample ausgewählt das ein höheres $z_i \cdot z_t$ aufweist. Ein höheres Skalarprodukt der beiden Embeddings bedeutet dass die Caption das Bild besser beschreibt (vgl. Training von {ref}`CLIP`).
+
+:::{admonition} Transformer Sequence
+:class: dropdown
+
 Die Sequenz auf welcher der Transformer agiert besteht aus:
 
 - Tokenization des Text
-- CLIP Text Embedding der Tokens
-- Embedding des Diffusion Timesteps
-- Noised CLIP Image Embedding
-- "Final Embedding" welches verwendet wird um das Denoised CLIP Image Embedding vorherzusagen
+- CLIP Text Embedding $z_t$ der Tokens
+- Embedding des sktuellen Diffusion Timesteps
+- Noised CLIP Image Embedding zum aktuellen Timestep
+- "Final Embedding" welches verwendet wird um das Denoised CLIP Image Embedding $z_i$ vorherzusagen
 
-Um die Qualität zu verbessern, werden bei jedem Sampling je 2 $z_i$ Samples generiert und das Sample ausgewählt das ein höheres $z_i \cdot z_t$ aufweist. Ein höheres Skalarprodukt der beiden Embeddings bedeutet dass die Caption das Bild besser beschreibt (vgl. Training von {ref}`CLIP`).
+:::
+
+:::{admonition} Loss Function
+:class: dropdown
 
 Der verwendete Loss ist eine Vereinfachung von der von {cite:t}`hoDenoisingDiffusionProbabilistic2020` verwendeten Loss Function bei DDPM, es wird lediglich der Mean Squared Error zwischen echtem $z_i$ und der Vorhersage berechnet:
 
 ```{math}
 L_{prior} = \mathbb{E}_{t \sim [1,T], z_i^{(t)} \sim q_t} [\|  f_{\theta}(z_i^{(t)}, t, y) - z_i \|^2]
 ```
+
+:::
 
 #### Decoder
 
