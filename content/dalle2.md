@@ -146,27 +146,12 @@ GLIDE ist ein weiteres TTI Model von OpenAI und wurde am 20. Dezember 2021 in de
 
 Zwar bekam GLIDE keinen eigenen Blog Eintrag auf der OpenAI Website, dafür wurde aber der Code offiziell auf GitHub veröffentlicht unter [`openai/glide-text2im`](https://github.com/openai/glide-text2im). Neben Checkpoints für eine kleinere Version, genannt *"GLIDE (filtered)"*, gibt es dort auch Notebooks zur Inferenz von Text-To-Image und Inpainting.
 
-Trainiert wurde diese kleine Version mit aggressiv gefilterten Trainingsdaten, um Gewalt und Hass Symbole zu entfernen. Sogar Humanoiden wurden komplett entfernt. Durch die relativ kleine Grösse scheitert GLIDE (filtered) jedoch häufig an Variable Binding.
+Trainiert wurde diese kleine Version mit aggressiv gefilterten Trainingsdaten, um Gewalt und Hass Symbole zu entfernen. Sogar Humanoiden wurden komplett entfernt. Durch die relativ kleine Grösse scheitert GLIDE (filtered) jedoch häufig an Variable Binding (siehe {numref}`glide-filtered-fig`)
 
-#### Basics of Denoising Diffusion Probabilistic Models (DDPM)
+:::{figure} attachments/glide_filtered_comparison.png
+:name: glide-filtered-fig
 
-Diffusion Modelle sind, wie auch GANs, Generative Modelle, sie generieren Daten ähnlich zu den Trainingsdaten mit denen sie trainiert wurden. Beschrieben wurden sie u.a. von {cite:t}`hoDenoisingDiffusionProbabilistic2020` mit Inspiration aus den "nonequilibrium thermodynamics".
-
-```{figure} attachments/diffusion_markov.png
-:name: markov-fig
-
-Forward $q(x_t|x_{t-1})$ and Backwards $p_{\theta}(x_{t-1}|x_t)$ Diffusion Process as a Markov Chain. {cite}`hoDenoisingDiffusionProbabilistic2020`
-```
-
-Ein Diffusion Model ist prinzipiell eine Markov Chain. In jedem Zeitschritt werden die Daten durch iteratives Aufaddieren von Gaussian Noise korrumpiert, bis nur noch Rauschen übrig ist. Das Netz wird dann darauf trainiert die Daten wiederherzustellen. Gelernt wird also der Reverse Diffusion Process oder auch Denoising, daher auch der Name Denoising Diffusion Probabilistic Models (DDPM). Sobald das Training abgeschlossen ist, kann man neue Daten generieren, indem man Rauschen auf das trainierte Model gibt und den Reverse Process ablaufen lässt.
-
-Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Ausserdem ist die Implementierung seht flexibel, denn die einzige Anforderung an die darunterliegende Architektur ist, dass Input und Output gleich gross sind.
-
-Nachteil der Diffusion Modelle gegenüber GANs sind jedoch die längeren Inferenzzeiten.
-
-:::{figure} attachments/denoising_different_steps.png
-
-DDPM applied on CelebA-HQ, showing the Reverse Process starting at different timesteps {cite}`hoDenoisingDiffusionProbabilistic2020`
+Shortcomings of GLIDE (filtered) {cite}`nicholGLIDEPhotorealisticImage2022`
 :::
 
 ## DALL·E 2
@@ -185,7 +170,7 @@ https://openai.com/dall-e-2/.
 
 **DALL·E 2** wurde von OpenAI entwickelt und mit dem [Blog Post](https://openai.com/dall-e-2/) des Projekts am *06. April 2022* veroeffentlicht. Das dazugehörige Paper *[Hierarchical Text-Conditional Image Generation with CLIP Latents](https://arxiv.org/abs/2204.06125)* von {cite:t}`rameshHierarchicalTextConditionalImage2022` wurde eine Woche später am *13. April 2022* vorgelegt und beschreibt **unCLIP**, die grundlegende Architektur hinter DALL·E 2. Das Deployment dessen, die sog. **DALL·E 2 Preview** ist eine modifizierte *"production version"* {cite}`rameshHierarchicalTextConditionalImage2022`.
 
-DALL·E 2 war bis zur Veröffentlichung von Googles Imagen State of the Art im Bereich Text-To-Image.
+Bis zur Veröffentlichung von Googles Imagen war DALL·E 2 State of the Art im Bereich Text-To-Image.
 
 Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1-fox-fig` vs. {numref}`dalle2-fox-fig`).
 
@@ -292,30 +277,38 @@ Ausserdem filtert die API Input nach Kriterien wie z.B. Sicherheitsbedenken (sex
 
 Allerdings geschieht diese Filtering von Input Text und Input Bild unabhängig voneinander. Demnach könnte man das Model anweisen Inpainting für ein Bild einer Dusche mit dem Text "a woman" zu machen, und dabei potenziell ein Bild einer nackten Frau generieren.
 
-### Limitations
+### Diffusion Basics
 
-Trotz des grossen Fortschritts in Fidelity und Diversity der Samples die DALL·E 2 generieren kann, hat es auch einige Limitationen. Ganz besonders ist es schlechter als GLIDE im Bereich Variable Binding (siehe {numref}`dalle2-variable-fig`). Die Hypothese der Autoren ist dass CLIP selbst keine expliziten Attributs Zuweisung modellieren kann.
-Aber auch detailreichere Szenen oder zusammenängenden Text (siehe {numref}`dalle2-text-fig`) schafft unCLIP nicht korrekt darzustellen.
+Diffusion Modelle sind, wie auch GANs, Generative Modelle, sie generieren Daten ähnlich zu den Trainingsdaten mit denen sie trainiert wurden. Beschrieben wurden sie u.a. von {cite:t}`hoDenoisingDiffusionProbabilistic2020` mit Inspiration aus den "nonequilibrium thermodynamics".
 
-```{figure} attachments/dalle2_figure15.png
-:name: dalle2-variable-fig
+:::{epigraph}
+A diffusion model is trained to undo the steps of a fixed corruption process.
 
-unCLIP confusing variable assignments {cite}`rameshHierarchicalTextConditionalImage2022`.
+-- {cite:t}`rameshHowDALLWorks`
+:::
+
+Jeder Zeitschritt addiert eine kleine Menge Gaussian Noise und verringert somit die Information im Bild. Nach dem letzten Schritt ist das Bild von purer Gaussian Noise nicht mehr unterscheidbar. Das ist der sog. *Forward Diffusion Process*.
+
+Da ein State bzw. ein Bild immer nur von dem vorherigen abhängig ist, kann der Prozess als Markov Chain modelliert werden (siehe {numref}`markov-fig`).
+
+Im *Reverse Diffusion Process* wird das Model wird nun darauf trainiert, den Prozess Schritt für Schritt rückgängig zu machen. Dabei lernt es Informationen wiederherzustellen, die jedem Schritt existiert haben könnten.
+
+```{figure} attachments/diffusion_markov.png
+:name: markov-fig
+
+Forward $q(x_t|x_{t-1})$ and Backwards $p_{\theta}(x_{t-1}|x_t)$ Diffusion Process as a Markov Chain. {cite}`hoDenoisingDiffusionProbabilistic2020`
 ```
 
-```{figure} attachments/dalle2_figure16.png
-:name: dalle2-text-fig
+Gibt man nun Rauschen auf das gelernte Model und wendet es mehrfach darauf an ($\approx 1000$ Schritte sind üblich), dann wird das Bild immer realistischer bis es komplett rauschfrei ist und aus der Verteilung der Trainingsdaten stammt.
 
-unCLIP prompted with: "A sign that says deep learning." {cite}`rameshHierarchicalTextConditionalImage2022`.
-```
+Ein grosser Vorteil der Diffusion Modelle gegenüber GANs ist, dass kein Adversarial Training erforderlich ist. Ausserdem ist die Implementierung sehr flexibel, die einzige Anforderung an die darunterliegende Architektur ist, dass Input und Output gleich gross sein müssen. In der Praxis werden häufig UNets verwendet.
 
-In {numref}`dalle2-compared-fig` sieht man eine groessere Gegenueberstellung der bisherigen Text To Image Modelle.
+Nachteil der Diffusion Modelle gegenüber GANs sind jedoch die längeren Inferenzzeiten.
 
-```{figure} attachments/dalle2_figure12.png
-:name: dalle2-compared-fig
+:::{figure} attachments/denoising_different_steps.png
 
-DALL·E vs GLIDE vs unCLIP on COCO {cite}`rameshHierarchicalTextConditionalImage2022`
-```
+DDPM applied on CelebA-HQ, showing the Reverse Process starting at different timesteps {cite}`hoDenoisingDiffusionProbabilistic2020`
+:::
 
 ### Architecture
 
@@ -377,11 +370,6 @@ L_{prior} = \mathbb{E}_{t \sim [1,T], z_i^{(t)} \sim q_t} [\|  f_{\theta}(z_i^{(
 
 #### Decoder
 
-```{note}
-
-- [ ] UNet kurz erwaehnen, schliesslich heisst das Kapitel Architektur
-```
-
 Der Decoder der in DALL·E 2 Verwendung findet ist eine leichte Modifikation des Diffusions Models {ref}`GLIDE` von {cite:t}`nicholGLIDEPhotorealisticImage2022`.
 Zur Erinnerung: GLIDE generiert Bilder direkt aus Text Embeddings, ohne Umweg über CLIP Embeddings.
 Um diese Embeddings nun bei gleichbleibender Architektur in den Decoder einzubringen, werden die sie in das existierende Timestep Embedding projiziert. Ausserdem werden sie auch noch in 4 extra Token projiziert die an die Text Tokens des GLIDE Text Encoders angehängt werden.
@@ -407,6 +395,31 @@ Der Trainingsdatensatz besteht aus 2 Teilen:
 
 Die CLIP Encoder wurden auf beiden trainiert und dann eingefroren. Prior, Decoder und Upsampler hingegen nur auf letzterem.
 
+### Limitations
+
+Trotz des grossen Fortschritts in Fidelity und Diversity der Samples die DALL·E 2 generieren kann, hat es auch einige Limitationen. Ganz besonders ist es schlechter als GLIDE im Bereich Variable Binding (siehe {numref}`dalle2-variable-fig`). Die Hypothese der Autoren ist dass CLIP selbst keine expliziten Attributs Zuweisung modellieren kann.
+Aber auch detailreichere Szenen oder zusammenängenden Text (siehe {numref}`dalle2-text-fig`) schafft unCLIP nicht korrekt darzustellen.
+
+```{figure} attachments/dalle2_figure15.png
+:name: dalle2-variable-fig
+
+unCLIP confusing variable assignments {cite}`rameshHierarchicalTextConditionalImage2022`.
+```
+
+```{figure} attachments/dalle2_figure16.png
+:name: dalle2-text-fig
+
+unCLIP prompted with: "A sign that says deep learning." {cite}`rameshHierarchicalTextConditionalImage2022`.
+```
+
+In {numref}`dalle2-compared-fig` sieht man eine groessere Gegenueberstellung der bisherigen Text To Image Modelle.
+
+```{figure} attachments/dalle2_figure12.png
+:name: dalle2-compared-fig
+
+DALL·E vs GLIDE vs unCLIP on COCO {cite}`rameshHierarchicalTextConditionalImage2022`
+```
+
 ## Further Work
 
 ### Google Imagen
@@ -424,7 +437,7 @@ Googles Imagen wurde am 13. Mai 2022 in dem Paper [Photorealistic Text-to-Image 
 Overview of the Imagen architecture {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
 :::
 
-Imagen verzichtet hier also auf das "Layer of Indirection" über die CLIP Image Embeddings und trainiert auf einem mächtigen Text Encoder. Ausserdem sind hier die Super-Resolution Modelle tatsächlich Text-Conditional.
+Imagen verzichtet hier also auf das "Layer of Indirection" über die CLIP Image Embeddings, verwendet wird stattdessen der mächtige Text Encoder `T5-XXL`, womit Imagen GLIDE ähnelt. Des weiteren wurden hier Text-Conditional Super-Resolution Modelle angewandt statt Unconditional wie in DALL·E 2.
 
 :::{figure} attachments/imagen_dalle2_glide_backpack.png
 
