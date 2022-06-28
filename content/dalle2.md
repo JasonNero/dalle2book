@@ -14,7 +14,7 @@ Email: [js450@hdm-stuttgart.de](mailto:js450@hdm-stuttgart.de)
 *Text-To-Image (TTI)* ist ein Subtask der *Bildsynthese* und beschreibt *Conditional Image Generation*, also die Generierung von Bildsamples unter der Bedingung eines Labels $p(x|y)$. *Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch Generierung von Daten ausserhalb des gelernten Trainingsdatensatzes.
 
 *Generative Adversarial Nets (GAN)* sind häufig Vertreter im Bereich TTI.
-Seit einiger Zeit werden aber auch verstärkt *Denoising Diffusion Models* verwendet, dazu später mehr.
+Seit einiger Zeit werden aber auch verstärkt *Diffusion Models* verwendet, dazu später mehr.
 
 Die Qualität von TTI Modellen wird gemessen an:
 
@@ -146,7 +146,7 @@ GLIDE ist ein weiteres TTI Model von OpenAI und wurde am 20. Dezember 2021 in de
 
 Zwar bekam GLIDE keinen eigenen Blog Eintrag auf der OpenAI Website, dafür wurde aber der Code offiziell auf GitHub veröffentlicht unter [`openai/glide-text2im`](https://github.com/openai/glide-text2im). Neben Checkpoints für eine kleinere Version, genannt *"GLIDE (filtered)"*, gibt es dort auch Notebooks zur Inferenz von Text-To-Image und Inpainting.
 
-Trainiert wurde diese kleine Version mit aggressiv gefilterten Trainingsdaten, um Gewalt und Hass Symbole zu entfernen. Sogar Humanoiden wurden komplett entfernt. Durch die relativ kleine Grösse scheitert GLIDE (filtered) jedoch häufig an Variable Binding (siehe {numref}`glide-filtered-fig`)
+Trainiert wurde diese kleine Version mit stark gefilterten Trainingsdaten, um Gewalt und Hass Symbole zu entfernen. Sogar Humanoiden wurden komplett entfernt. Durch die relativ kleine Grösse scheitert GLIDE (filtered) jedoch häufig an Variable Binding (siehe {numref}`glide-filtered-fig`)
 
 :::{figure} attachments/glide_filtered_comparison.png
 :name: glide-filtered-fig
@@ -160,19 +160,29 @@ Shortcomings of GLIDE (filtered) {cite}`nicholGLIDEPhotorealisticImage2022`
 
 Cherrypicked generations of DALL·E 2 {cite}`rameshHierarchicalTextConditionalImage2022`.
 ```
-
+<!-- 
 ```{figure} attachments/dalle2explained_polarbear.gif
 :height: 256px
 
 DALL·E 2 creating an image of a polarbear playing bass.  
 https://openai.com/dall-e-2/.
-```
+``` 
+-->
 
 **DALL·E 2** wurde von OpenAI entwickelt und mit dem [Blog Post](https://openai.com/dall-e-2/) des Projekts am *06. April 2022* veroeffentlicht. Das dazugehörige Paper *[Hierarchical Text-Conditional Image Generation with CLIP Latents](https://arxiv.org/abs/2204.06125)* von {cite:t}`rameshHierarchicalTextConditionalImage2022` wurde eine Woche später am *13. April 2022* vorgelegt und beschreibt **unCLIP**, die grundlegende Architektur hinter DALL·E 2. Das Deployment dessen, die sog. **DALL·E 2 Preview** ist eine modifizierte *"production version"* {cite}`rameshHierarchicalTextConditionalImage2022`.
 
 Bis zur Veröffentlichung von Googles Imagen war DALL·E 2 State of the Art im Bereich Text-To-Image.
 
 Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1-fox-fig` vs. {numref}`dalle2-fox-fig`).
+
+::::{admonition} Claude Monet
+:class: dropdown
+
+:::{figure} attachments/monet_wheat_field.jpg
+
+The Wheat Field, Claude Monet (1881)
+:::
+::::
 
 :::::{grid}
 :gutter: 2
@@ -230,7 +240,7 @@ DALL·E 2 Text Diff {cite}`rameshHowDALLWorks`: $(\text{image of victorian house
 
 Initial bekamen 400 ausgewählte Personen Zugriff auf eine API über die Inferenzen durchgeführt werden können und über eine Waitlist werden weitere Nutzer zugelassen. Stand 18. Mai 2022 wurden bereits 3 Millionen Bilder generiert und es sollen $\approx 1000$ neue Nutzer pro Woche freigeschaltet werden {cite}`DALLResearchPreview2022`.
 
-Grund für den beschränkten Zugang sind Sicherheitsbedenken seitens OpenAI {cite}`mishkinDALLPreviewRisks2022`. Vermutlich aber auch Interesse an kommerzieller Verwertung wie bereits auch GPT3.
+Offizieller Grund für den beschränkten Zugang sind Sicherheitsbedenken seitens OpenAI {cite}`mishkinDALLPreviewRisks2022`.
 
 ```{figure} attachments/dalle2_figure2.png
 ---
@@ -246,7 +256,7 @@ In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestell
 - **Prior** um Text Embeddings in Image Embeddings umzuwandeln
 - **Decoder** um aus Image Embeddings ein Bild zu generieren
 
-Tatsächlich ist DALL·E 2 eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text Encodings, nun auf CLIP Image Embeddings trainiert wird. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren, daher auch der Name *"unCLIP"*.
+Tatsächlich ist DALL·E 2 eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text Encodings, nun auf CLIP Image Embeddings trainiert wird und diese rückgängig macht, daher auch der Name *"unCLIP"*. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren.
 
 Ähnlich wie bei DALL·E, wurde kein Code des Models veröffentlicht, deshalb wurde von der Open-Source Community ein Versuch gestartet, DALL·E 2 (bzw. das im Paper spezifizierte unCLIP) zu reproduzieren, es gibt also eine inoffizielle Implementierung in dem GitHub Repository [`lucidrains/DALLE2-pytorch`](https://github.com/lucidrains/DALLE2-pytorch).
 Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Community des AI Vereins [LAION](https://laion.ai/#top) einen ersten [Prior](https://huggingface.co/zenglishuci/conditioned-prior) und auch erste [Decoder](https://huggingface.co/Veldrovive/DA-VINC-E) sind in der Community zu finden.
@@ -350,7 +360,7 @@ Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Auto
 
 ##### Diffusion Prior
 
-Wie bereits im {ref}`GLIDE` Kapitel erwähnt ist eine Anforderung an Diffusion Modellen, dass Input und Output die gleiche Grösse haben, bei DALL·E 2 wird hier ein *Decoder-Only Transformer* mit *Casual Attention Mask* verwendet.
+Wie bereits oben erwähnt ist eine Anforderung an Diffusion Modellen, dass Input und Output die gleiche Grösse haben, bei DALL·E 2 wird hier ein *Decoder-Only Transformer* mit *Casual Attention Mask* verwendet.
 
 Die Sequenz auf welcher der Transformer agiert besteht aus:
 
