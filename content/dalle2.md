@@ -108,12 +108,12 @@ https://openai.com/blog/dall-e/.
 
 OpenAI's *Contrastive Language Image Pretraining (CLIP)* von wurde am 26. Februar 2021 vorgestellt in ["Learning Transferable Visual Models From Natural Language Supervision"](http://arxiv.org/abs/2103.00020) von {cite:t}`radfordLearningTransferableVisual2021`.
 
+CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings umwandelt und ein weiterer der Bilder in Image Embeddings umwandelt.
+
 ```{figure} attachments/clip-overview-a.svg
 Illustration of the CLIP Training.  
 {cite}`radfordLearningTransferableVisual2021`.
 ```
-
-CLIP besteht aus zwei Encodern, einem der Text in Text Embeddings umwandelt und ein weiterer der Bilder in Bild Embeddings umwandelt.
 
 Für einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
 
