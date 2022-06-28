@@ -5,12 +5,31 @@ Author: Jason Schuehlein (js450)
 Email: [js450@hdm-stuttgart.de](mailto:js450@hdm-stuttgart.de)  
 :::
 
+:::{contents}
+:depth: 3
+:::
+
 ## Introduction Text-To-Image
 
-*Image Generation* beschreibt den Task neue Bilder aus einem gelernten Datensatz zu generieren. *Text-To-Image (TTI)* ist ein Subtask und beschreibt *Conditional Image Generation*, also die Generierung von Samples unter der Bedingung eines Labels $p(x|y)$.
-*Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch Generierung von Daten ausserhalb des Trainingsdatensatzes.
+*Text-To-Image (TTI)* ist ein Subtask der *Bildsynthese* und beschreibt *Conditional Image Generation*, also die Generierung von Bildsamples unter der Bedingung eines Labels $p(x|y)$. *Zero-Shot* TTI geht einen Schritt weiter und ermöglicht auch Generierung von Daten ausserhalb des gelernten Trainingsdatensatzes.
 
-Häufig wird TTI in Verbindung gebracht mit *Generative Adversarial Nets (GAN)*, seit Kurzem jedoch auch verstärkt mit *Denoising Diffusion Models*, worauf u.a. auch DALL·E 2 basiert.
+*Generative Adversarial Nets (GAN)* sind häufig Vertreter im Bereich TTI.
+Seit einiger Zeit werden aber auch verstärkt *Denoising Diffusion Models* verwendet, dazu später mehr.
+
+Die Qualität von TTI Modellen wird gemessen an:
+
+- **Fidelity**: Übereinstimmung mit den Originalbildern
+- **Diversity**: Abdeckung der gesamten Variation der Originalverteilung
+
+Kombiniert kann man das an der sog. *Fréchet inception distance (FID)* ablesen.
+
+:::{admonition} Fréchet inception distance (FID)
+:class: dropdown
+
+Die *Fréchet inception distance (FID)* ist eine Metrik zur Beurteilung der Qualität von Bildern generiert durch generative Modelle. Im Vergleich zum *Inception Score (IS)*, wird nicht nur die Verteilung der generierten Bilder betrachtet sondern die Verteilungen der echten sowie generierten Bilder verglichen. FID kombiniert *Fidelity* und *Diversity* in einer Zahl.
+
+Die FID entspricht der quadrierten *Wasserstein Distanz* zwischen zwei multivariaten Gaussverteilungen.
+:::
 
 ## Recent Work
 
