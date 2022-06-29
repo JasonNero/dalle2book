@@ -336,6 +336,9 @@ Wie bereits beschrieben besteht DALL·E 2 aus folgenden Komponenten:
 - Der *Prior* $P(z_i|y)$ erzeugt CLIP Image Embeddings $z_i$ unter gegebener Caption $y$
 - Der *Decoder* $P(x|z_i,y)$ erzeugt Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, bleibt aber hier ungenutzt)
 
+:::{admonition} Why $P( x | y ) = P(x | z_i, y)P(z_i|y)$?
+:class: dropdown
+
 Beide zusammen ergeben ein Generative Model $P(x|y)$ für die Bilder $x$ mit gegebenen Captions $y$. $P(x|y)$ kann geschrieben werden als
 
 ```{math}
@@ -350,6 +353,8 @@ P( x | y ) =  P(x, z_i | y) = P(x | z_i, y)P(z_i|y)
 ```
 
 Man kann also aus der echten Verteilung $P(x|y)$ samplen, indem man erst $z_i$ mit dem Prior sampled und dann $x$ mit dem Decoder.
+
+:::
 
 ```{figure} attachments/hyperparameters.png
 :name: hyperparams-fig
