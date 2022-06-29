@@ -5,5 +5,4 @@ format: jb-book
 root: intro
 chapters:
 - file: dalle2
-- file: bonus
 - file: bibliography

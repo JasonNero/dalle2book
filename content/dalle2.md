@@ -249,7 +249,7 @@ name: dalle2-architecture-fig
 Overview of DALL·E 2 {cite}`rameshHierarchicalTextConditionalImage2022`.
 ```
 
-In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestellt, sie besteht aus 3 Elementen:
+In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestellt, sie besteht aus 4 Elementen:
 
 - **CLIP Model** um Text Embeddings zu generieren
 - **Prior** um Text Embeddings in Image Embeddings umzuwandeln
@@ -270,7 +270,7 @@ Inference on the same fox prompt as above, using [`LAION-AI/dalle2-laion`](https
 
 [ThisImageDoesNotExist](https://thisimagedoesnotexist.com) ist eine kleine Demo bei der man raten muss welche Bilder von einem Menschen sind und welche von DALL·E 2 generiert wurden. Der Durchschnitt liegt bei $18/30$ korrekt zugeordneten Bildern.
 
-### Access
+### API Access
 
 Unter den 400 Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen pro Woche {cite}`DALLResearchPreview2022`.
 
@@ -331,10 +331,10 @@ DDPM applied on CelebA-HQ, showing the Reverse Process starting at different tim
 
 ### Architecture
 
-Wie bereits beschrieben besteht DALL·E 2 aus 2 Komponenten:
+Wie bereits beschrieben besteht DALL·E 2 aus folgenden Komponenten:
 
-- Der *Prior* $P(z_i|y)$ erzeugt CLIP Image Embeddings $z_i$ unter gegebener Caption $y$.
-- Der *Decoder* $P(x|z_i,y)$ erzeugt Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, bleibt aber hier ungenutzt).
+- Der *Prior* $P(z_i|y)$ erzeugt CLIP Image Embeddings $z_i$ unter gegebener Caption $y$
+- Der *Decoder* $P(x|z_i,y)$ erzeugt Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, bleibt aber hier ungenutzt)
 
 Beide zusammen ergeben ein Generative Model $P(x|y)$ für die Bilder $x$ mit gegebenen Captions $y$. $P(x|y)$ kann geschrieben werden als
 
