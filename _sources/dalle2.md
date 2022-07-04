@@ -117,7 +117,7 @@ Illustration of the CLIP Training.
 
 Für einen Batch aus $N$ Image-Text Paaren $(x,y)$ werden alle Text Embeddings allen Image Embeddings gegenübergestellt. CLIP wird nun darauf trainiert die $N$ der $N \times N$ möglichen Image-Text Paare zu identifizieren die korrekt sind. Verwendet wird hierbei die *Cosine Similarity*, diese soll für die korrekten Paare maximiert und die inkorrekten Paare minimiert werden.
 
-Effektiv lernt CLIP ein *"joint representation space"* für Texte und Bilder.
+CLIP lernt einen *"joint representation space"* für Texte und Bilder.
 
 ````{admonition} Refresher: Cosine Similarity
 :class: dropdown
@@ -151,7 +151,7 @@ Trainiert wurde diese kleine Version mit stark gefilterten Trainingsdaten, um Ge
 :::{figure} attachments/glide_filtered_comparison.png
 :name: glide-filtered-fig
 
-Shortcomings of GLIDE (filtered) {cite}`nicholGLIDEPhotorealisticImage2022`
+First row shows the original GLIDE, followed by a smaller version trained on the same dataset as the full-sized one. In the third row, we see the smaller version trained on the filtered dataset instead. Finally, in the fourth row, the authors used CLIP to guide the model towards better results {cite}`nicholGLIDEPhotorealisticImage2022`.
 :::
 
 ## DALL·E 2
@@ -171,18 +171,8 @@ https://openai.com/dall-e-2/.
 
 **DALL·E 2** wurde von OpenAI entwickelt und mit dem [Blog Post](https://openai.com/dall-e-2/) des Projekts am *06. April 2022* veroeffentlicht. Das dazugehörige Paper *[Hierarchical Text-Conditional Image Generation with CLIP Latents](https://arxiv.org/abs/2204.06125)* von {cite:t}`rameshHierarchicalTextConditionalImage2022` wurde eine Woche später am *13. April 2022* vorgelegt und beschreibt **unCLIP**, die grundlegende Architektur hinter DALL·E 2. Das Deployment dessen, die sog. **DALL·E 2 Preview** ist eine modifizierte *"production version"* {cite}`rameshHierarchicalTextConditionalImage2022`.
 
-Bis zur Veröffentlichung von Googles Imagen war DALL·E 2 State of the Art im Bereich Text-To-Image.
-
+Zur Veröffentlichung war DALL·E 2 State of the Art im Bereich Text-To-Image.
 Im Vergleich zu seinem namentlichen Vorgänger hat DALL·E 2 eine höhere Auflösung und ein höheres Level an Photorealismus (siehe {numref}`dalle1-fox-fig` vs. {numref}`dalle2-fox-fig`).
-
-::::{admonition} Claude Monet
-:class: dropdown
-
-:::{figure} attachments/monet_wheat_field.jpg
-
-The Wheat Field, Claude Monet (1881)
-:::
-::::
 
 :::::{grid}
 :gutter: 2
@@ -212,6 +202,15 @@ https://openai.com/dall-e-2/.
 :::
 ::::
 :::::
+
+::::{admonition} Style of Claude Monet
+:class: dropdown
+
+:::{figure} attachments/monet_wheat_field.jpg
+
+The Wheat Field, Claude Monet (1881)
+:::
+::::
 
 Neben *Text-to-Image* besitzt DALL·E 2 aber auch noch weitere Fähigkeiten:
 
@@ -250,11 +249,12 @@ name: dalle2-architecture-fig
 Overview of DALL·E 2 {cite}`rameshHierarchicalTextConditionalImage2022`.
 ```
 
-In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestellt, sie besteht aus 3 Elementen:
+In {numref}`dalle2-architecture-fig` ist die grundlegende Architektur dargestellt, sie besteht aus 4 Elementen:
 
 - **CLIP Model** um Text Embeddings zu generieren
 - **Prior** um Text Embeddings in Image Embeddings umzuwandeln
 - **Decoder** um aus Image Embeddings ein Bild zu generieren
+- **2 Upscaler** $64^2 \rightarrow 256^2$ und $256^2 \rightarrow 1024^2$
 
 Tatsächlich ist DALL·E 2 eher eine Weiterentwicklung von GLIDE ({numref}`glide-fox-fig`). Die eigentliche Neuerung besteht darin, dass ein Diffusion Model statt auf Text Encodings, nun auf CLIP Image Embeddings trainiert wird und diese rückgängig macht, daher auch der Name *"unCLIP"*. Aus diesem "Umweg" resultieren vorteilhafte Eigenschaften, so kann man beispielsweise den CLIP Latent Space erkunden und visualisieren.
 
@@ -270,7 +270,7 @@ Inference on the same fox prompt as above, using [`LAION-AI/dalle2-laion`](https
 
 [ThisImageDoesNotExist](https://thisimagedoesnotexist.com) ist eine kleine Demo bei der man raten muss welche Bilder von einem Menschen sind und welche von DALL·E 2 generiert wurden. Der Durchschnitt liegt bei $18/30$ korrekt zugeordneten Bildern.
 
-### Access
+### API Access
 
 Unter den 400 Auserwählten waren zu Beginn nur 200 OpenAI Mitarbeiter, 10 Künstler, "ein paar Dutzend" anerkannte Wissenschaftler und 165 "company friends". Über eine Waitlist wurden über Zeit auch weiteren Personen eingeladen, bis zu 1.000 Personen pro Woche {cite}`DALLResearchPreview2022`.
 
@@ -320,12 +320,24 @@ Nachteil der Diffusion Modelle gegenüber GANs sind jedoch die längeren Inferen
 DDPM applied on CelebA-HQ, showing the Reverse Process starting at different timesteps {cite}`hoDenoisingDiffusionProbabilistic2020`
 :::
 
+:::{admonition} Guided Diffusion
+:class: dropdown
+
+**CLIP Guidance** wird zur Inferenzzeit angewandt, es wird bei jedem Schritt von CLIP berechnet, wie hoch die Similarity zwischen Text Embedding und dem denoisten Bild ist. Der *Gradient des CLIP Scores* wird nun verwendet um das denoiste Bild in die Richtung zu verändern in der CLIP einen hohen Text-Image Match vorhersagt.
+
+**Classifier-free Guidance** wird ebenfalls zur Inferenzzeit angewendet, jedoch benötigt man hierzu kein zusätzliches Model. Stattdessen wird zu einem Diffusion Step je ein Bild mit und ein Bild ohne Conditional generiert. Dann wird die *Differenz* beider Bilder berechnet und das denoiste Bild einfach weiter in diese Richtung bewegt, häufig multipliziert mit einer *Guidance Scale*.
+
+:::
+
 ### Architecture
 
-Wie bereits beschrieben besteht DALL·E 2 aus 2 Komponenten:
+Wie bereits beschrieben besteht DALL·E 2 aus folgenden Komponenten:
 
-- Der *Prior* $P(z_i|y)$ erzeugt CLIP Image Embeddings $z_i$ unter gegebener Caption $y$.
-- Der *Decoder* $P(x|z_i,y)$ erzeugt Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, bleibt aber hier ungenutzt).
+- Der *Prior* $P(z_i|y)$ erzeugt CLIP Image Embeddings $z_i$ unter gegebener Caption $y$
+- Der *Decoder* $P(x|z_i,y)$ erzeugt Bilder $x$ unter gegebenen Image Embeddings $z_i$ (und optional auch der Caption $y$, bleibt aber hier ungenutzt)
+
+:::{admonition} Why $P( x | y ) = P(x | z_i, y)P(z_i|y)$?
+:class: dropdown
 
 Beide zusammen ergeben ein Generative Model $P(x|y)$ für die Bilder $x$ mit gegebenen Captions $y$. $P(x|y)$ kann geschrieben werden als
 
@@ -342,10 +354,7 @@ P( x | y ) =  P(x, z_i | y) = P(x | z_i, y)P(z_i|y)
 
 Man kann also aus der echten Verteilung $P(x|y)$ samplen, indem man erst $z_i$ mit dem Prior sampled und dann $x$ mit dem Decoder.
 
-Was bisher nicht erwähnt wurde sind die 2 Upsampling Diffusion Models:
-
-- $64 \times 64 \rightarrow 256 \times 256$ und
-- $256 \times 256 \rightarrow 1024 \times 1024$
+:::
 
 ```{figure} attachments/hyperparameters.png
 :name: hyperparams-fig
@@ -355,8 +364,7 @@ Hyperparameters {cite}`rameshHierarchicalTextConditionalImage2022`
 
 #### Prior
 
-Der Prior generiert aus dem Labeln $y$ ein CLIP Image Embedding $z_i$.
-Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Autoregressive (AR)* Prior und einen *Diffusion* Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.
+Der Prior generiert aus dem CLIP Text Embedding $z_t$ eines Labelns $y ein CLIP Image Embedding $z_i$. Hierfür haben die Autoren zwei verschiedene Model Klassen getestet: einen *Autoregressive (AR)* Prior und einen *Diffusion* Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.
 
 ##### Diffusion Prior
 
@@ -469,6 +477,11 @@ Adapted from {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
 
 Imagen vs DALL·E 2 vs GLIDE: "A storefront with Text to Image written on it.".  
 Adapted from {cite}`sahariaPhotorealisticTexttoImageDiffusion2022`.
+:::
+
+:::{figure} attachments/imagen_fid.png
+
+Imagen is the new state-of-the-art on COCO FID. https://imagen.research.google
 :::
 
 ## Questions and Discussion
