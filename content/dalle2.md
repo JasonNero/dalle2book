@@ -364,8 +364,7 @@ Hyperparameters {cite}`rameshHierarchicalTextConditionalImage2022`
 
 #### Prior
 
-Der Prior generiert aus dem Labeln $y$ ein CLIP Image Embedding $z_i$.
-Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Autoregressive (AR)* Prior und einen *Diffusion* Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.
+Der Prior generiert aus dem CLIP Text Embedding $z_t$ eines Labels $y$ ein CLIP Image Embedding $z_i$. Hierfür haben die Autoren zwei verschiedene Model Klassen getestet, einen *Autoregressive (AR)* Prior und einen *Diffusion* Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.
 
 ##### Diffusion Prior
 
