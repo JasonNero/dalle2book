@@ -846,7 +846,7 @@ Diese ist grösstenteils abgeschlossen, und Stand 25. Juni 2022 trainiert die Co
 </figure>
 <section id="prior">
 <h4>Prior<a class="headerlink" href="#prior" title="Permalink to this headline">#</a></h4>
-<p>Der Prior generiert aus dem CLIP Text Embedding <span class="math notranslate nohighlight">\(z_t\)</span> eines Labelns <span class="math notranslate nohighlight">\(y ein CLIP Image Embedding \)</span>z_i$. Hierfür haben die Autoren zwei verschiedene Model Klassen getestet: einen <em>Autoregressive (AR)</em> Prior und einen <em>Diffusion</em> Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.</p>
+<p>Der Prior generiert aus dem CLIP Text Embedding <span class="math notranslate nohighlight">\(z_t\)</span> eines Labels <span class="math notranslate nohighlight">\(y\)</span> ein CLIP Image Embedding <span class="math notranslate nohighlight">\(z_i\)</span>. Hierfür haben die Autoren zwei verschiedene Model Klassen getestet: einen <em>Autoregressive (AR)</em> Prior und einen <em>Diffusion</em> Prior. Letzterer wurde als effizienter und qualitativ hochwertiger befunden und im Folgenden genauer betrachtet.</p>
 <section id="diffusion-prior">
 <h5>Diffusion Prior<a class="headerlink" href="#diffusion-prior" title="Permalink to this headline">#</a></h5>
 <p>Wie bereits oben erwähnt ist eine Anforderung an Diffusion Modellen, dass Input und Output die gleiche Grösse haben, bei DALL·E 2 wird hier ein <em>Decoder-Only Transformer</em> mit <em>Casual Attention Mask</em> verwendet.</p>
